@@ -1,0 +1,44 @@
+{
+  "name": "file-dock",
+  "version": "1.0.0",
+  "description": "FileDock is a file management and storage application built with Express and Prisma. It allows users to upload, organize, view, and download their files through a folder-based storage system.",
+  "keywords": [
+    "nodejs",
+    "express",
+    "prisma",
+    "postgresql",
+    "passportjs",
+    "multer",
+    "file-upload",
+    "file-storage",
+    "file-management"
+  ],
+  "homepage": "https://github.com/ShreyasKR8/file-dock#readme",
+  "bugs": {
+    "url": "https://github.com/ShreyasKR8/file-dock/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShreyasKR8/file-dock.git"
+  },
+  "license": "ISC",
+  "author": "Shreyas K R",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.12.0"
+  }
+}
