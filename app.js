@@ -13,7 +13,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-    res.send("FileDock is running");
+    res.render("index", {
+        title: "FileDock",
+    });
 });
 
 app.listen(PORT, () => {
