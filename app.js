@@ -1,6 +1,7 @@
 import express from "express";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import authRouter from "./routes/authRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +18,8 @@ app.get("/", (req, res) => {
         title: "FileDock",
     });
 });
+
+app.use('/auth', authRouter);
 
 app.listen(PORT, () => {
     console.log(`server listening at ${PORT}`);
