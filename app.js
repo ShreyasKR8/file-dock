@@ -7,6 +7,7 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import passport from "passport";
 import { prisma } from "./lib/prisma.js";
 import "./config/passport.js"; // registers LocalStrategy
+import fileRouter from "./routes/fileRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/files/', fileRouter);
 
 app.listen(PORT, () => {
     console.log(`server listening at ${PORT}`);
