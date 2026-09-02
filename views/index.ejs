@@ -9,8 +9,12 @@
 <body>
     <main>
         <div class="hero-actions">
-            <a class="btn btn-primary" href="/auth/register">Create an account</a>
-            <a class="btn btn-secondary" href="/auth/login">I already have one</a>
+        <% if (locals.currentUser == null) { %>
+                <a class="btn btn-primary" href="/auth/register">Create an account</a>
+                <a class="btn btn-secondary" href="/auth/login">I already have one</a>
+        <% } else { %>
+            <a class="btn btn-secondary" href="/auth/logout">Logout</a>
+        <% } %>
         </div>
         <h1><%= title %></h1>
         <p>Upload, organize, and access your files from one calm little dock.</p>

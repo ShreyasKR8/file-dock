@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { 
     registerGet, 
     loginGet,
+    logoutGet,
     registerPost,
 } from '../controllers/authController.js'
 import passport from 'passport';
@@ -18,5 +19,7 @@ authRouter.post('/login',
         failureRedirect: "/auth/login",
     })
 );
+
+authRouter.get('/logout', logoutGet);
 
 export default authRouter;

@@ -102,3 +102,13 @@ export const registerPost = [
 export const loginGet = (req, res) => {
     res.render("auth/login-form");
 };
+
+export const logoutGet = (req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+
+        res.redirect("/");
+    });
+};
