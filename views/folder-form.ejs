@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Members only</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="icon" href="/images/group.png"> -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <main class="auth-page">
+        <section class="panel">
+            <p class="eyebrow">Create New Folder</p>
+            <!-- <h1 class="page-title">Join the Club</h1> -->
+
+            <form method="POST" action="/folders/create">
+                <div class="field">
+                    <label for="folder-name">Folder Name</label>
+                    <input id="folder-name" type="text" name="name" placeholder="Type your answer here" required />
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit">Create</button>
+                    <a class="btn btn-secondary" href="/">Back to home</a>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer class="site-footer">
+    </footer>
+</body>
+</html>

@@ -26,7 +26,7 @@ export const validateFolder = [
         }),
 ];
 
-export const createFolder = [
+export const createFolderPost = [
     validateFolder,
     async (req, res, next) => {
         const errors = validationResult(req);
@@ -58,3 +58,10 @@ export const createFolder = [
         }
     }
 ];
+
+export const createFolderGet = async (req, res) => {
+    res.render("folder-form", {
+        errors: [],
+        formData: {},
+    });
+}

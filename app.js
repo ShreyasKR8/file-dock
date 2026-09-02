@@ -1,13 +1,14 @@
 import express from "express";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import authRouter from "./routes/authRouter.js";
 import session from "express-session";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import passport from "passport";
 import { prisma } from "./lib/prisma.js";
 import "./config/passport.js"; // registers LocalStrategy
+import authRouter from "./routes/authRouter.js";
 import fileRouter from "./routes/fileRouter.js";
+import folderRouter from "./routes/folderRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,9 +60,9 @@ app.get("/", (req, res) => {
         title: "FileDock",
     });
 });
-
 app.use('/auth', authRouter);
 app.use('/files/', fileRouter);
+app.use('/folders', folderRouter);
 
 app.listen(PORT, () => {
     console.log(`server listening at ${PORT}`);
