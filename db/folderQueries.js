@@ -5,3 +5,13 @@ export const createFolder = async (folderData) => {
         data: folderData,
     });
 };
+
+export const getFolders = async (userId) => {
+    const folders = await prisma.folder.findMany({
+        where: {
+            userId: userId,
+        }
+    });
+
+    return folders;
+}
