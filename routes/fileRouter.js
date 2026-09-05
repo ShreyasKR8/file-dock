@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ensureAuth } from "../middleware/authMiddleware.js"; 
 import upload from "../config/multer.js";
 import { uploadFile } from "../controllers/fileController.js";
-import { getMyFiles } from "../controllers/folderController.js";
+import { getMyFiles } from "../controllers/fileController.js";
 
 const fileRouter = Router();
 

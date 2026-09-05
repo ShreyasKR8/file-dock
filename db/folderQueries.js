@@ -15,3 +15,16 @@ export const getFoldersByUser = async (userId) => {
 
     return folders;
 }
+
+export const updateFolderName =
+    async (folderId, userId, newName) => {
+        return prisma.folder.update({
+            where: {
+                id: folderId,
+                userId,
+            },
+            data: {
+                name: newName,
+            },
+        });
+    }

@@ -17,8 +17,7 @@
             <button type="submit">Upload</button>
         </form>
         <button type="button" id="create-folder-btn">Create new folder</button>
-        <dialog 
-            id="create-folder-dialog" 
+        <dialog id="create-folder-dialog" 
             data-has-errors="<%= locals.errors?.length > 0 %>"
         >
             <form action="/folders/create" method="POST">
@@ -46,7 +45,37 @@
             </form>
         </dialog>
         <% folders.forEach(folder => { %>
-            <a href=""><%= folder.name %></a>
+            <div class="folder">
+                <a href=""><%= folder.name %></a>
+                <button type="button" class="edit-folder-btn">Edit</button>
+                <dialog class="edit-folder-dialog"
+                    data-has-errors="<%= locals.errors?.length > 0 %>"
+                >
+                    <form action="/folders/<%= folder.id %>?_method=PATCH" method="POST">
+                        <h2>Edit Folder Name</h2>
+
+                        <label for="folder-name">Folder name</label>
+                        <input
+                            type="text"
+                            id="folder-name"
+                            name="name"
+                            value="<%= locals.formData?.name ?? '' %>"
+                            required
+                        >
+
+                        <% if (locals.errors) { %>
+                            <div class="form-errors" role="alert">
+                                <% locals.errors.forEach(error => { %>
+                                    <p><%= error.msg %></p>
+                                <% }) %>
+                            </div>
+                        <% } %>
+
+                        <button type="button" class="cancel-edit-folder-btn">Cancel</button>
+                        <button type="submit">Rename</button>
+                    </form>
+                </dialog>
+            </div>
         <% }); %>
     <% } %>
     <footer class="site-footer">

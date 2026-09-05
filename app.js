@@ -9,6 +9,7 @@ import "./config/passport.js"; // registers LocalStrategy
 import authRouter from "./routes/authRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import folderRouter from "./routes/folderRouter.js";
+import methodOverride from "method-override";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +39,7 @@ const sessionConfig = {
     },
 }
 
+app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
