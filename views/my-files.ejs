@@ -75,6 +75,15 @@
                         <button type="submit">Rename</button>
                     </form>
                 </dialog>
+                <button type="button" class="delete-folder-btn">Delete</button>
+                <dialog class="delete-folder-dialog">
+                    <form action="/folders/<%= folder.id %>?_method=DELETE" method="POST">
+                        <h2>Delete Folder <%= folder.name %></h2>
+                        <p>Are you sure?</p>
+                        <button type="button" class="cancel-delete-folder-btn">Cancel</button>
+                        <button type="submit">Delete</button>
+                    </form>
+                </dialog>
             </div>
         <% }); %>
     <% } %>

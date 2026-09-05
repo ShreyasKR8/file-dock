@@ -1,4 +1,8 @@
-import { createFolder, updateFolderName } from "../db/folderQueries.js";
+import {
+    createFolder,
+    deleteFolderByUser,
+    updateFolderName
+} from "../db/folderQueries.js";
 import { body, validationResult } from "express-validator";
 
 export const validateFolder = [
@@ -67,7 +71,7 @@ export const createFolderGet = async (req, res) => {
 };
 
 export const renameFolder = [
-    validateFolder, 
+    validateFolder,
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -92,7 +96,17 @@ export const renameFolder = [
         const folder = await updateFolderName(
             folderId, req.user.id, req.body.name);
 
-        console.log(folder);
         res.redirect("/files");
     }
 ];
+
+export const deleteFolder = async (req, res) => {
+    const folderId = Number(req.params.id);
+    if (isNaN(folderId)) {
+        return res.status(400).send('Invalid folder ID');
+    }
+
+    await deleteFolderByUser(folderId, req.user.id);
+
+    res.redirect("/files");
+};

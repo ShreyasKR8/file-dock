@@ -28,3 +28,12 @@ export const updateFolderName =
             },
         });
     }
+    
+export const deleteFolderByUser = async (folderId, userId) => {
+    await prisma.folder.delete({
+        where: {
+            id: folderId,
+            userId,
+        }
+    });
+};

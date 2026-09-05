@@ -6,6 +6,9 @@ const editDialogs = document.querySelectorAll(".edit-folder-dialog");
 const openEditBtns = document.querySelectorAll(".edit-folder-btn");
 const cancelEditBtns = document.querySelectorAll(".cancel-edit-folder-btn");
 
+const openDeleteBtns = document.querySelectorAll(".delete-folder-btn");
+const cancelDeleteBtns = document.querySelectorAll(".cancel-delete-folder-btn");
+
 //-------------- Bind create folder events----------------//
 if (createDialog?.dataset.hasErrors === "true") {
     createDialog.showModal();
@@ -30,7 +33,7 @@ editDialogs.forEach(dialog => {
 openEditBtns.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
-        const editDialog = folder.querySelector(".edit-folder-dialog")
+        const editDialog = folder.querySelector(".edit-folder-dialog");
         editDialog.showModal();
     });
 });
@@ -38,8 +41,26 @@ openEditBtns.forEach(btn => {
 cancelEditBtns.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
-        const editDialog = folder.querySelector(".edit-folder-dialog")
+        const editDialog = folder.querySelector(".edit-folder-dialog");
         editDialog.close();
+    });
+});
+//---------------- xxxxxxxxxxxxxxxxxx -------------//
+
+//----------------- Bind delete folder events ---------------//
+openDeleteBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const folder = btn.closest(".folder"); 
+        const deleteDialog = folder.querySelector(".delete-folder-dialog"); 
+        deleteDialog.showModal();
+    });
+});
+
+cancelDeleteBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const folder = btn.closest(".folder"); 
+        const deleteDialog = folder.querySelector(".delete-folder-dialog"); 
+        deleteDialog.close();
     });
 });
 //---------------- xxxxxxxxxxxxxxxxxx -------------//
