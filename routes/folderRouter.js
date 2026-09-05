@@ -3,7 +3,7 @@ import { createFolderGet, createFolderPost } from "../controllers/folderControll
 
 const folderRouter = Router();
 
-folderRouter.get("/create", createFolderGet)
+folderRouter.get("/create", createFolderGet);
 folderRouter.post("/create", createFolderPost);
 
 export default folderRouter;

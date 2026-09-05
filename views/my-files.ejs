@@ -16,12 +16,41 @@
             <input type="file" name="file" required>
             <button type="submit">Upload</button>
         </form>
-        <a href="/folders/create">Create new folder</a>
-        <% folders.map(folder => { %>
+        <button type="button" id="create-folder-btn">Create new folder</button>
+        <dialog 
+            id="create-folder-dialog" 
+            data-has-errors="<%= locals.errors?.length > 0 %>"
+        >
+            <form action="/folders/create" method="POST">
+                <h2>Create new folder</h2>
+
+                <label for="folder-name">Folder name</label>
+                <input
+                    type="text"
+                    id="folder-name"
+                    name="name"
+                    value="<%= locals.formData?.name ?? '' %>"
+                    required
+                >
+
+                <% if (locals.errors) { %>
+                    <div class="form-errors" role="alert">
+                        <% locals.errors.forEach(error => { %>
+                            <p><%= error.msg %></p>
+                        <% }) %>
+                    </div>
+                <% } %>
+
+                <button type="button" id="cancel-folder-btn">Cancel</button>
+                <button type="submit">Create</button>
+            </form>
+        </dialog>
+        <% folders.forEach(folder => { %>
             <a href=""><%= folder.name %></a>
         <% }); %>
     <% } %>
     <footer class="site-footer">
     </footer>
+    <script src="/js/folders.js"></script>
 </body>
 </html>

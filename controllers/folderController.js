@@ -31,14 +31,15 @@ export const createFolderPost = [
     validateFolder,
     async (req, res, next) => {
         const errors = validationResult(req);
-        if(!errors.isEmpty()) {
-            console.log(errors.array());
+        if (!errors.isEmpty()) {
+            const folders = await getFoldersByUser(req.user.id);
 
-            //Todo
-            // return res.render('auth/register-form', {
-            //     errors: errors.array(),
-            //     formData: req.body,
-            // });
+            return res.status(400).render("my-files", {
+                title: "My Files",
+                folders,
+                errors: errors.array(),
+                formData: req.body,
+            });
         }
 
         next();
