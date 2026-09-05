@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Members only</title>
+    <title>FileDock</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/images/group.png">
     <link rel="stylesheet" href="/css/styles.css">
@@ -11,9 +11,16 @@
 
 <body>
     <h1><%= title %></h1>
-    <% folders.map(folder => { %>
-        <a href=""><%= folder.name %></a>
-    <% }); %>
+    <% if (locals.currentUser != null) { %>
+        <form action="/files/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+        <a href="/folders/create">Create new folder</a>
+        <% folders.map(folder => { %>
+            <a href=""><%= folder.name %></a>
+        <% }); %>
+    <% } %>
     <footer class="site-footer">
     </footer>
 </body>

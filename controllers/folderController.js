@@ -1,5 +1,6 @@
 import { createFolder } from "../db/folderQueries.js";
 import { body, validationResult } from "express-validator";
+import { getFoldersByUser } from "../db/folderQueries.js";
 
 
 export const validateFolder = [
@@ -33,7 +34,7 @@ export const createFolderPost = [
         if(!errors.isEmpty()) {
             console.log(errors.array());
 
-            //Todo: add a route
+            //Todo
             // return res.render('auth/register-form', {
             //     errors: errors.array(),
             //     formData: req.body,
@@ -51,7 +52,7 @@ export const createFolderPost = [
 
             await createFolder(folderData);
 
-            res.redirect('/');
+            res.redirect('/files');
         } catch (err) {
             console.log(err);
             next(err);
@@ -63,5 +64,14 @@ export const createFolderGet = async (req, res) => {
     res.render("folder-form", {
         errors: [],
         formData: {},
+    });
+}
+
+export const getMyFiles = async (req, res) => {
+    const folders = await getFoldersByUser(req.user.id);
+
+    res.render("my-files", {
+        title: "My Files",
+        folders: folders,
     });
 }

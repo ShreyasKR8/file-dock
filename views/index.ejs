@@ -11,19 +11,14 @@
         <div class="hero-actions">
         <% if (locals.currentUser == null) { %>
                 <a class="btn btn-primary" href="/auth/register">Create an account</a>
-                <a class="btn btn-secondary" href="/auth/login">I already have one</a>
+                <a class="btn btn-secondary" href="/auth/login">Log In</a>
         <% } else { %>
             <a class="btn btn-secondary" href="/auth/logout">Logout</a>
         <% } %>
         </div>
         <h1><%= title %></h1>
+        <p>Upload, organize, and access your files from one calm little dock.</p>
         <% if (locals.currentUser != null) { %>
-            <p>Upload, organize, and access your files from one calm little dock.</p>
-            <form action="/files/upload" method="POST" enctype="multipart/form-data">
-                <input type="file" name="file" required>
-                <button type="submit">Upload</button>
-            </form>
-            <a href="/folders/create">Create new folder</a>
             <h3>Browse your files: </h3>
             <a href="/files">MyFiles</a>
         <% } %>

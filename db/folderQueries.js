@@ -6,7 +6,7 @@ export const createFolder = async (folderData) => {
     });
 };
 
-export const getFolders = async (userId) => {
+export const getFoldersByUser = async (userId) => {
     const folders = await prisma.folder.findMany({
         where: {
             userId: userId,
