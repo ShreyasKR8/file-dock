@@ -6,6 +6,14 @@ export const createFolder = async (folderData) => {
     });
 };
 
+export const getFolderById = async (folderId) => {
+    return prisma.folder.findUnique({
+        where: {
+            id: folderId,
+        }
+    })
+}
+
 export const getFoldersByUser = async (userId) => {
     const folders = await prisma.folder.findMany({
         where: {
