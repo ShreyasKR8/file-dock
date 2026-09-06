@@ -26,15 +26,17 @@ export const uploadFile = async (req, res) => {
     };
 
     await createFile(fileData);
-    
+
     res.redirect("/files");
 };
 
 export const getMyFiles = async (req, res) => {
     const folders = await getFoldersByUser(req.user.id);
-    // console.log(folders);
+    const rootFiles = await getFilesInRoot();
+
     res.render("my-files", {
         title: "My Files",
         folders: folders,
+        files: rootFiles,
     });
 }
