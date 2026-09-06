@@ -6,10 +6,11 @@ export const createFolder = async (folderData) => {
     });
 };
 
-export const getFolderById = async (folderId) => {
+export const getFolderById = async (folderId, userId) => {
     return prisma.folder.findUnique({
         where: {
             id: folderId,
+            userId: userId,
         }
     })
 }

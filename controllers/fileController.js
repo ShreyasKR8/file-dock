@@ -1,16 +1,20 @@
-import { getFoldersByUser } from "../db/folderQueries.js";
+import {
+    getFolderById,
+    getFoldersByUser
+} from "../db/folderQueries.js";
 import { createFile } from "../db/fileQueries.js";
 
 export const uploadFile = async (req, res) => {
-    console.log(req.file);
-    console.log(req.body.folderId);
-
     const folderId = req.body.folderId
-        ? Number(req.body.folderId) 
+        ? Number(req.body.folderId)
         : null;
 
-    //Todo: 
-    // verify folder id belongs to current user to avoid malicious requests
+    if (folderId !== null) {
+        const folder = await getFolderById(folderId, req.user.id);
+        if (!folder) {
+            return res.status(400).send('Invalid folder');
+        }
+    }
 
     const fileData = {
         name: req.file.originalname,
