@@ -1,6 +1,9 @@
+import { getFilesByFolderId } from "../db/fileQueries.js";
 import {
     createFolder,
     deleteFolderByUser,
+    getFolderById,
+    getFoldersByUser,
     updateFolderName
 } from "../db/folderQueries.js";
 import { body, validationResult } from "express-validator";
@@ -67,6 +70,23 @@ export const createFolderGet = async (req, res) => {
     res.render("folder-form", {
         errors: [],
         formData: {},
+    });
+};
+
+export const getFolder = async (req, res) => {
+    const folderId = Number(req.params.id);
+    if(isNaN(folderId)) {
+        return res.status(400).send('Invalid folder ID');
+    }
+
+    const files = await getFilesByFolderId(folderId, req.user.id);
+    const folder = await getFolderById(folderId, req.user.id);
+    // Get folders once nested folder support is added
+
+    res.render("folder", {
+        title: folder.name? folder.name : "Folder",  
+        files,
+        folders: [],
     });
 };
 

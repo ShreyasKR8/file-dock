@@ -2,7 +2,7 @@ import {
     getFolderById,
     getFoldersByUser
 } from "../db/folderQueries.js";
-import { createFile } from "../db/fileQueries.js";
+import { createFile, getFilesInRoot } from "../db/fileQueries.js";
 
 export const uploadFile = async (req, res) => {
     const folderId = req.body.folderId

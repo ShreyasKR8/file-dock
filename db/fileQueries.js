@@ -13,3 +13,13 @@ export const getFilesInRoot = async () => {
         }
     });
 }
+
+export const getFilesByFolderId = async (folderId, userId) => {
+    return prisma.file.findMany({
+        where: {
+            folderId,
+            userId,
+        }
+    })
+
+}

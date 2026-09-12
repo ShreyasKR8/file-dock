@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
-    createFolderGet,
     createFolderPost,
-    renameFolder, deleteFolder
+    renameFolder, deleteFolder,
+    getFolder
 } from "../controllers/folderController.js";
 import { ensureAuth } from "../middleware/authMiddleware.js";
 
@@ -12,6 +12,7 @@ const folderRouter = Router();
 // folderRouter.get("/create", createFolderGet);
 folderRouter.post("/create", ensureAuth, createFolderPost);
 
+folderRouter.get("/:id", ensureAuth, getFolder);
 folderRouter.patch("/:id", ensureAuth, renameFolder);
 folderRouter.delete("/:id", ensureAuth, deleteFolder);
 
