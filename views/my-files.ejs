@@ -55,6 +55,7 @@
         <div class="files-folders">
             <% files.forEach(file => { %>
                 <p><%= file.name %></p>
+                <a href="/files/<%= file.id %>">View Details</a>
             <% }); %>
             <% folders.forEach(folder => { %>
                 <div class="folder">

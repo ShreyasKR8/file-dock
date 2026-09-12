@@ -12,7 +12,7 @@ export const getFilesInRoot = async () => {
             folderId: null,
         }
     });
-}
+};
 
 export const getFilesByFolderId = async (folderId, userId) => {
     return prisma.file.findMany({
@@ -20,6 +20,14 @@ export const getFilesByFolderId = async (folderId, userId) => {
             folderId,
             userId,
         }
-    })
+    });
+};
 
-}
+export const getFileById = async (fileId, userId) => {
+    return prisma.file.findUnique({
+        where: {
+            id: fileId,
+            userId
+        }
+    });
+};

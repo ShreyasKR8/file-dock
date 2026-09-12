@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FileDock</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <% if (locals.currentUser != null) { %>
+        <div class="file-details">
+            <h1><%= file.name %></h1>
+            <p>Type: <%= file.extension %></p>
+            <p>Size: <%= file.size %></p>
+            <p>Uploaded: <%= file.createdAt %></p>
+        </div>
+    <% } %>
+    <a href="/files">Go Back</a>
+    <footer class="site-footer">
+    </footer>
+</body>
+</html>

@@ -18,7 +18,10 @@
         </form>
         <div class="files-folders">
             <% files.forEach(file => { %>
-                <p><%= file.name %></p>
+                <div class="file">
+                    <p><%= file.name %></p>
+                    <a href="/files/<%= file.id %>">View Details</a>
+                </div>
             <% }); %>
             <% folders.forEach(folder => { %>
                 <div class="folder">
@@ -64,6 +67,7 @@
             <% }); %>
         </div>
     <% } %>
+    <a href="/files">Go Back</a>
     <footer class="site-footer">
     </footer>
     <script src="/js/folders.js"></script>
