@@ -4,6 +4,7 @@ import {
 } from "../db/folderQueries.js";
 import { createFile, getFileById, getFilesInRoot } from "../db/fileQueries.js";
 import path from "node:path";
+import upload from "../middleware/upload.js";
 
 export const uploadFile = async (req, res) => {
     const folderId = req.body.folderId
@@ -94,6 +95,16 @@ export const downloadFile = async (req, res) => {
     } 
 
     res.download(filePath, file.name);
+};
+
+export const handleFileUpload = (req, res, next) => {
+    upload.single("file")(req, res, (err) => {
+        if(!err) {
+            return next();
+        }
+
+        return next(err);
+    });
 };
 
 const formatFileSize = (bytes) => {

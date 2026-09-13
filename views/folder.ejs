@@ -13,7 +13,7 @@
     <h1><%= title %></h1>
     <% if (locals.currentUser != null) { %>
         <form action="/files/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" required>
+            <input type="file" id="file" name="file" required>
             <button type="submit">Upload</button>
         </form>
         <div class="files-folders">
@@ -70,6 +70,7 @@
     <a href="/files">Go Back</a>
     <footer class="site-footer">
     </footer>
-    <script src="/js/folders.js"></script>
+    <script src="/js/folders.js" defer></script>
+    <script src="/js/files.js" defer></script>
 </body>
 </html>
