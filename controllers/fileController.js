@@ -50,6 +50,10 @@ export const getFile = async (req, res) => {
 
     const file = await getFileById(fileId, req.user.id);
 
+    if (!file) {
+        return res.status(404).send("File not found");
+    }   
+
     const parsedName = path.parse(file.name);
 
     const fileDetails = {
@@ -68,6 +72,28 @@ export const getFile = async (req, res) => {
     };
 
     res.render("file", { file: fileDetails });
+};
+
+export const downloadFile = async (req, res) => {
+    const fileId = Number(req.params.id);
+    if(isNaN(fileId)) {
+        return res.status(400).send('Invalid file ID');
+    }
+
+    const file = await getFileById(fileId, req.user.id);
+
+    const filePath = path.join(
+        process.cwd(),
+        "uploads",
+        file.storageKey
+    );
+    
+
+    if (!file) {
+        return res.status(404).send("File not found");
+    } 
+
+    res.download(filePath, file.name);
 };
 
 const formatFileSize = (bytes) => {

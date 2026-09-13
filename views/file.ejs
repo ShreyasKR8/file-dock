@@ -15,6 +15,7 @@
             <p>Type: <%= file.extension %></p>
             <p>Size: <%= file.size %></p>
             <p>Uploaded: <%= file.createdAt %></p>
+            <a href="/files/<%= file.id %>/download">Download</a>
         </div>
     <% } %>
     <a href="/files">Go Back</a>

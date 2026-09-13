@@ -63,7 +63,7 @@ app.get("/", (req, res) => {
     });
 });
 app.use('/auth', authRouter);
-app.use('/files/', fileRouter);
+app.use('/files', fileRouter);
 app.use('/folders', folderRouter);
 
 app.listen(PORT, () => {
