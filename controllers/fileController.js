@@ -5,6 +5,7 @@ import {
 import { createFile, getFileById, getFilesInRoot } from "../db/fileQueries.js";
 import path from "node:path";
 import upload from "../middleware/upload.js";
+import { MAX_FILE_SIZE } from "../config/constants.js";
 
 export const uploadFile = async (req, res) => {
     const folderId = req.body.folderId
@@ -40,6 +41,7 @@ export const getMyFiles = async (req, res) => {
         title: "My Files",
         folders: folders,
         files: rootFiles,
+        maxFileSize: MAX_FILE_SIZE,
     });
 };
 

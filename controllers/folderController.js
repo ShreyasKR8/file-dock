@@ -1,3 +1,4 @@
+import { MAX_FILE_SIZE } from "../config/constants.js";
 import { getFilesByFolderId } from "../db/fileQueries.js";
 import {
     createFolder,
@@ -87,6 +88,7 @@ export const getFolder = async (req, res) => {
         title: folder.name? folder.name : "Folder",  
         files,
         folders: [],
+        maxFileSize: MAX_FILE_SIZE,
     });
 };
 

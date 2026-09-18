@@ -13,7 +13,10 @@
     <h1><%= title %></h1>
     <% if (locals.currentUser != null) { %>
         <form action="/files/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" id="file" name="file" required>
+            <input type="file" id="file" name="file"
+                data-max-file-size="<%= maxFileSize %>"
+                required
+            >
             <button type="submit">Upload</button>
         </form>
         <div class="files-folders">

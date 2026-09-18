@@ -1,10 +1,10 @@
 import multer from "multer";
 import storage from "../config/multer.js";
+import { MAX_FILE_SIZE } from "../config/constants.js";
 
-const MAX_SIZE = 50 * 1024 * 1024; // 50 MB
 const allowedMimeTypes = new Set([
     "image/jpeg",
-    // "image/png",
+    "image/png",
     "video/mp4",
     "image/webp",
     "application/pdf",
@@ -15,7 +15,7 @@ const allowedMimeTypes = new Set([
 const upload = multer({
     storage,
     limits: {
-        fileSize: MAX_SIZE, //bytes, 
+        fileSize: MAX_FILE_SIZE, //bytes, 
     },
     fileFilter,
 });
