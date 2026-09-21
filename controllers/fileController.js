@@ -6,6 +6,7 @@ import { createFile, getFileById, getFilesInRoot } from "../db/fileQueries.js";
 import path from "node:path";
 import upload from "../middleware/upload.js";
 import { MAX_FILE_SIZE } from "../config/constants.js";
+import { createSignedUpload } from "../services/storageService.js";
 
 export const uploadFile = async (req, res) => {
     const folderId = req.body.folderId
@@ -99,6 +100,34 @@ export const downloadFile = async (req, res) => {
     res.download(filePath, file.name);
 };
 
+export const createUploadRequest = async (req, res, next) => {
+    try {
+        console.log("req.body:", req.body);
+        const {
+            name, size, mimetype, folderId, 
+        } = req.body;
+
+
+        if(!name || !size || !mimetype) {
+            return res.status(400).json({
+                error: "Missing file metadata.",
+            });
+        }
+
+        const { 
+            storagePath, 
+            token 
+        } = await createSignedUpload(name, req.user.id);
+
+        res.json({
+            storagePath,
+            token,
+        });
+    } catch(error) {
+        next(error);
+    }
+}
+
 export const handleFileUpload = (req, res, next) => {
     upload.single("file")(req, res, (err) => {
         if(!err) {
@@ -108,6 +137,8 @@ export const handleFileUpload = (req, res, next) => {
         return next(err);
     });
 };
+
+
 
 const formatFileSize = (bytes) => {
     if (bytes < 1024 * 1024) {
