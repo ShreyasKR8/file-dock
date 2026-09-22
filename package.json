@@ -27,6 +27,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "build:client": "esbuild public/js/file-upload.js --bundle --outfile=public/dist/file-upload.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -48,6 +49,7 @@
     "tus-js-client": "^4.3.1"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "prisma": "^7.9.1"
   }
 }

@@ -12,8 +12,9 @@
 <body>
     <h1><%= title %></h1>
     <% if (locals.currentUser != null) { %>
-        <form action="/files/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" id="file" name="file" 
+        <form id="upload-form">
+            <label for="file-input">Choose file</label>
+            <input type="file" id="file-input" name="file" 
                 data-max-file-size="<%= maxFileSize %>"    
                 required
             >
@@ -113,6 +114,7 @@
     <% } %>
     <footer class="site-footer">
     </footer>
+    <script src="/dist/file-upload.js" defer></script>
     <script src="/js/folders.js" defer></script>
     <script src="/js/files.js" defer></script>
 </body>

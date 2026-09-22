@@ -102,13 +102,13 @@ export const downloadFile = async (req, res) => {
 
 export const createUploadRequest = async (req, res, next) => {
     try {
-        console.log("req.body:", req.body);
+        // console.log("req.body:", req.body);
         const {
-            name, size, mimetype, folderId, 
+            name, size, mimeType, folderId, 
         } = req.body;
 
 
-        if(!name || !size || !mimetype) {
+        if(!name || !size || !mimeType) {
             return res.status(400).json({
                 error: "Missing file metadata.",
             });
