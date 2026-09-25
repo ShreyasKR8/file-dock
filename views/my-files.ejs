@@ -114,6 +114,9 @@
     <% } %>
     <footer class="site-footer">
     </footer>
+    <script>
+        window.SUPABASE_PROJECT_ID = <%- JSON.stringify(supabaseProjectId) %>;
+    </script>
     <script src="/dist/file-upload.js" defer></script>
     <script src="/js/folders.js" defer></script>
     <script src="/js/files.js" defer></script>

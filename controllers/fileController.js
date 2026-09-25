@@ -38,11 +38,15 @@ export const getMyFiles = async (req, res) => {
     const folders = await getFoldersByUser(req.user.id);
     const rootFiles = await getFilesInRoot();
 
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const projectId =  new URL(supabaseUrl).hostname.split(".")[0];
+
     res.render("my-files", {
         title: "My Files",
         folders: folders,
         files: rootFiles,
         maxFileSize: MAX_FILE_SIZE,
+        supabaseProjectId: projectId,
     });
 };
 
@@ -102,7 +106,6 @@ export const downloadFile = async (req, res) => {
 
 export const createUploadRequest = async (req, res, next) => {
     try {
-        // console.log("req.body:", req.body);
         const {
             name, size, mimeType, folderId, 
         } = req.body;
@@ -124,7 +127,10 @@ export const createUploadRequest = async (req, res, next) => {
             token,
         });
     } catch(error) {
-        next(error);
+        console.error("Failed to create signed upload:", error);
+        return res.status(500).json({
+            error: "Failed to create upload request. Check the server logs for details.",
+        });
     }
 }
 

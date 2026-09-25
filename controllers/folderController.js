@@ -45,6 +45,8 @@ export const createFolderPost = [
                 folders,
                 errors: errors.array(),
                 formData: req.body,
+                maxFileSize: MAX_FILE_SIZE,
+                supabaseProjectId: projectId,
             });
         }
 
@@ -104,6 +106,8 @@ export const renameFolder = [
                 folders,
                 errors: errors.array(),
                 formData: req.body,
+                maxFileSize: MAX_FILE_SIZE,
+                supabaseProjectId: projectId,
             });
         }
 
