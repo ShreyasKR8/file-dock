@@ -2,6 +2,7 @@ import * as tus from "tus-js-client";
 
 const uploadForm = document.querySelector("#upload-form");
 const fileInput = document.querySelector("#file-input");
+const folderSelectElement = document.querySelector(".folder-select");
 
 uploadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -70,11 +71,36 @@ uploadForm.addEventListener("submit", async (event) => {
                 console.log(`${percentage}%`);
             },
 
-            onSuccess() {
+            onSuccess: async () => {
                 console.log("Upload successful.");
                 console.log("Storage path:", storagePath);
                 console.log("TUS URL:", upload.url);
-            },
+                const folderId = folderSelectElement.value
+                    ? Number(folderSelectElement.value)
+                    : null;
+                
+                const response = await fetch("/files/complete-upload", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: file.name,
+                        storageKey: storagePath,
+                        mimeType: file.type,
+                        size: file.size,
+                        folderId,
+                    }),
+                });
+
+                if(!response.ok) {
+                    const errorData = await response.json().catch(() => null);
+                    throw new Error(
+                        errorData?.error ?? `Failed to save file metadata (${response.status}).`
+                    );
+                }
+            }
+
         });
 
         const previousUploads =

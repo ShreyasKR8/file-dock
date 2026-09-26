@@ -18,7 +18,7 @@
                 data-max-file-size="<%= maxFileSize %>"    
                 required
             >
-            <select name="folderId">
+            <select name="folderId" class="folder-select">
                 <option value="">MyFiles</option>
                 <% folders.forEach(folder => { %>
                     <option value="<%= folder.id %>">
