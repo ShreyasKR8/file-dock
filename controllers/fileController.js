@@ -44,14 +44,16 @@ export const getFile = async (req, res) => {
         name: parsedName.name,
         extension: parsedName.ext,
         size: formatFileSize(file.size),
-        createdAt: file.createdAt.toLocaleString("en-IN", {
-            weekday: "long",
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "numeric",
-            minute: "2-digit",
-        }),
+        createdAt:
+            file.createdAt.toLocaleString("en-IN", {
+                timeZone: "Asia/Kolkata",
+                weekday: "long",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+            }) + " IST",
     };
 
     res.render("file", { file: fileDetails });
