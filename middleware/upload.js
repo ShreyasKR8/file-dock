@@ -1,16 +1,6 @@
 import multer from "multer";
 import storage from "../config/multer.js";
-import { MAX_FILE_SIZE } from "../config/constants.js";
-
-const allowedMimeTypes = new Set([
-    "image/jpeg",
-    "image/png",
-    "video/mp4",
-    "image/webp",
-    "application/pdf",
-    "text/plain",
-    "application/zip",
-]);
+import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
 
 const upload = multer({
     storage,
@@ -21,7 +11,7 @@ const upload = multer({
 });
 
 function fileFilter(req, file, cb) {
-    if (!allowedMimeTypes.has(file.mimetype)) {
+    if (!ALLOWED_MIME_TYPES.has(file.mimetype)) {
         const error = new Error("Unsupported file type.");
         error.code = "INVALID_FILE_TYPE";
         return cb(error);

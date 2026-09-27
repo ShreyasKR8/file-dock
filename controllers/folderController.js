@@ -82,15 +82,21 @@ export const getFolder = async (req, res) => {
         return res.status(400).send('Invalid folder ID');
     }
 
-    const files = await getFilesByFolderId(folderId, req.user.id);
     const folder = await getFolderById(folderId, req.user.id);
+    if (!folder) {
+        return res.status(404).send("Folder not found");
+    }
+
+    const files = await getFilesByFolderId(folderId, req.user.id);
     // Get folders once nested folder support is added
 
     res.render("folder", {
         title: folder.name? folder.name : "Folder",  
+        folder,
         files,
         folders: [],
         maxFileSize: MAX_FILE_SIZE,
+        supabaseProjectId: new URL(process.env.SUPABASE_URL).hostname.split(".")[0],
     });
 };
 

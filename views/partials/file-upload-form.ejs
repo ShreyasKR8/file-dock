@@ -1,0 +1,37 @@
+<form id="upload-form" data-folder-id="<%= currentFolderId ?? '' %>">
+    <label for="file-input">Choose file</label>
+    <input type="file" id="file-input" 
+        name="file" 
+        data-max-file-size="<%= maxFileSize %>" 
+        required>
+
+    <% if(showFolderSelect) { %>
+        <select name="folderId" class="folder-select">
+            <option value="">MyFiles</option>
+            <% folders.forEach(folder=> { %>
+                <option value="<%= folder.id %>">
+                    <%= folder.name %>
+                </option>
+                <% }) %>
+        </select>
+    <% } %>
+
+    <% if (locals.uploadErrors) { %>
+        <div class="form-errors" role="alert">
+            <% uploadErrors.forEach(error=> { %>
+                <p>
+                    <%= error.msg %>
+                </p>
+                <% }) %>
+        </div>
+    <% } %>
+
+    <p id="upload-error" class="form-errors" role="alert" hidden></p>
+    <button type="submit">Upload</button>
+</form>
+
+<script>
+    window.SUPABASE_PROJECT_ID = <%- JSON.stringify(supabaseProjectId) %>;
+</script>
+<script src="/js/files.js" defer></script>
+<script src="/dist/file-upload.js" defer></script>

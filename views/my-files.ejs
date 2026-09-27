@@ -12,29 +12,12 @@
 <body>
     <h1><%= title %></h1>
     <% if (locals.currentUser != null) { %>
-        <form id="upload-form">
-            <label for="file-input">Choose file</label>
-            <input type="file" id="file-input" name="file" 
-                data-max-file-size="<%= maxFileSize %>"    
-                required
-            >
-            <select name="folderId" class="folder-select">
-                <option value="">MyFiles</option>
-                <% folders.forEach(folder => { %>
-                    <option value="<%= folder.id %>">
-                        <%= folder.name %>
-                    </option>
-                <% }) %>
-            </select>
-            <% if (locals.uploadErrors) { %>
-                <div class="form-errors" role="alert">
-                <% uploadErrors.forEach(error => { %>
-                    <p><%= error.msg %></p>
-                <% }) %>
-                </div>
-            <% } %>
-            <button type="submit">Upload</button>
-        </form>
+        <%- include("partials/file-upload-form", {
+            folders,
+            maxFileSize,
+            showFolderSelect: true,
+            currentFolderId: null
+        }) %>
         <button type="button" id="create-folder-btn">Create new folder</button>
         <dialog id="create-folder-dialog" 
             data-has-errors="<%= locals.errors?.length > 0 %>"
@@ -114,11 +97,6 @@
     <% } %>
     <footer class="site-footer">
     </footer>
-    <script>
-        window.SUPABASE_PROJECT_ID = <%- JSON.stringify(supabaseProjectId) %>;
-    </script>
-    <script src="/dist/file-upload.js" defer></script>
     <script src="/js/folders.js" defer></script>
-    <script src="/js/files.js" defer></script>
 </body>
 </html>

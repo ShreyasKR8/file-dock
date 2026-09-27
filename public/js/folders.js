@@ -14,23 +14,23 @@ if (createDialog?.dataset.hasErrors === "true") {
     createDialog.showModal();
 }
 
-openButton.addEventListener("click", () => {
+openButton?.addEventListener("click", () => {
     createDialog.showModal();
 });
 
-cancelButton.addEventListener("click", () => {
+cancelButton?.addEventListener("click", () => {
     createDialog.close();
 });
 //--------------xxxxxxxxxxxxxxxxxxxxxx----------------//
 
 //---------------- Bind edit folder events -------------//
-editDialogs.forEach(dialog => {
+editDialogs?.forEach(dialog => {
     if (dialog?.dataset.hasErrors === "true") {
         dialog.showModal();
     }
 });
 
-openEditBtns.forEach(btn => {
+openEditBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
         const editDialog = folder.querySelector(".edit-folder-dialog");
@@ -38,7 +38,7 @@ openEditBtns.forEach(btn => {
     });
 });
 
-cancelEditBtns.forEach(btn => {
+cancelEditBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
         const editDialog = folder.querySelector(".edit-folder-dialog");
@@ -48,7 +48,7 @@ cancelEditBtns.forEach(btn => {
 //---------------- xxxxxxxxxxxxxxxxxx -------------//
 
 //----------------- Bind delete folder events ---------------//
-openDeleteBtns.forEach(btn => {
+openDeleteBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
         const deleteDialog = folder.querySelector(".delete-folder-dialog"); 
@@ -56,7 +56,7 @@ openDeleteBtns.forEach(btn => {
     });
 });
 
-cancelDeleteBtns.forEach(btn => {
+cancelDeleteBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
         const folder = btn.closest(".folder"); 
         const deleteDialog = folder.querySelector(".delete-folder-dialog"); 

@@ -5,7 +5,7 @@ import {
 import { createFile, getFileById, getFilesInRoot } from "../db/fileQueries.js";
 import path from "node:path";
 import upload from "../middleware/upload.js";
-import { MAX_FILE_SIZE } from "../config/constants.js";
+import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
 import { createSignedUpload } from "../services/storageService.js";
 
 
@@ -86,9 +86,19 @@ export const createUploadRequest = async (req, res, next) => {
         } = req.body;
 
 
-        if (!name || !size || !mimeType) {
+        if (typeof name !== "string" || !name.trim() || !Number.isSafeInteger(size) || size <= 0) {
             return res.status(400).json({
                 error: "Missing file metadata.",
+            });
+        }
+
+        if (!ALLOWED_MIME_TYPES.has(mimeType)) {
+            return res.status(400).json({ error: "This file type is not supported." });
+        }
+
+        if (size > MAX_FILE_SIZE) {
+            return res.status(400).json({
+                error: `File must be ${MAX_FILE_SIZE / (1024 * 1024)} MB or smaller.`,
             });
         }
 
@@ -111,7 +121,7 @@ export const createUploadRequest = async (req, res, next) => {
 
 export const completeUpload = async (req, res, next) => {
     try {
-        console.log("complete-upload body:", req.body);
+        // console.log("complete-upload body:", req.body);
         const folderId = req.body.folderId;
 
         const normalizedFolderId =

@@ -1,4 +1,4 @@
-const fileInput = document.querySelector("#file");
+const fileInput = document.querySelector("#file-input");
 const maxFileSize = Number(fileInput.dataset.maxFileSize);
 
 fileInput.addEventListener("change", () => {
