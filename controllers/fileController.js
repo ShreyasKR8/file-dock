@@ -7,6 +7,7 @@ import path from "node:path";
 import upload from "../middleware/upload.js";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
 import { createSignedUpload } from "../services/storageService.js";
+import supabase from "../config/supabase.js";
 
 
 export const getMyFiles = async (req, res) => {
@@ -60,25 +61,35 @@ export const getFile = async (req, res) => {
 };
 
 export const downloadFile = async (req, res) => {
-    const fileId = Number(req.params.id);
-    if (isNaN(fileId)) {
-        return res.status(400).send('Invalid file ID');
+    try {
+        const fileId = Number(req.params.id);
+        if (isNaN(fileId)) {
+            return res.status(400).send('Invalid file ID');
+        }
+
+        const file = await getFileById(fileId, req.user.id);
+
+        if (!file) {
+            return res.status(404).send("File not found");
+        }
+
+        const { data, error } = await supabase.storage
+            .from('files')
+            .createSignedUrl(file.storageKey, 60,
+                {
+                    download: file.name,
+                }
+            );
+
+        if (error) {
+            throw error;
+        }
+
+        return res.redirect(data.signedUrl);
+
+    } catch (error) {
+        next(error);
     }
-
-    const file = await getFileById(fileId, req.user.id);
-
-    const filePath = path.join(
-        process.cwd(),
-        "uploads",
-        file.storageKey
-    );
-
-
-    if (!file) {
-        return res.status(404).send("File not found");
-    }
-
-    res.download(filePath, file.name);
 };
 
 export const createUploadRequest = async (req, res, next) => {
@@ -165,6 +176,7 @@ export const completeUpload = async (req, res, next) => {
 
         const file = await createFile(fileData);
 
+        // redirects to '/' home in file-upload.js file
         return res.status(201).json({ file });
     } catch (error) {
         next(error);
