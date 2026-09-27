@@ -124,6 +124,8 @@ async function handleUploadComplete(storagePath, file) {
             errorData?.error ?? `Failed to save file metadata (${response.status}).`
         );
     }
+
+    window.location.href = "/";
 }
 
 function onUploadProgress(bytesUploaded, bytesTotal) {
