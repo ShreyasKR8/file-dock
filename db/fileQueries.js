@@ -31,3 +31,11 @@ export const getFileById = async (fileId, userId) => {
         }
     });
 };
+
+export const deleteFileById = async (fileId) => {
+    return prisma.file.delete({
+        where: {
+            id: fileId
+        }
+    });
+}

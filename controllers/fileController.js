@@ -2,7 +2,10 @@ import {
     getFolderById,
     getFoldersByUser
 } from "../db/folderQueries.js";
-import { createFile, getFileById, getFilesInRoot } from "../db/fileQueries.js";
+import {
+    createFile, deleteFileById,
+    getFileById, getFilesInRoot
+} from "../db/fileQueries.js";
 import path from "node:path";
 import upload from "../middleware/upload.js";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
@@ -231,4 +234,37 @@ export const uploadFile = async (req, res) => {
     await createFile(fileData);
 
     res.redirect("/files");
+};
+
+export const deleteFile = async (req, res, next) => {
+    try {
+        const fileId = Number(req.params.id);
+        if (isNaN(fileId)) {
+            return res.status(400).send('Invalid file ID');
+        }
+
+        const file = await getFileById(fileId, req.user.id);
+
+        if (!file) {
+            return res.status(404).send("File not found");
+        }
+
+        const storagePath = file.storageKey;
+
+        const { error } = await supabase.storage
+        .from('files')
+        .remove([storagePath]);
+
+        if(error) {
+            console.error("Supabase delete error:", error);
+            return res.status(500).send("Failed to delete file in storage");
+        }
+
+        await deleteFileById(fileId);
+
+        res.redirect('/');
+    } catch (error) {
+        console.log("File Delete failed: ", error);
+        next(error);
+    }
 };

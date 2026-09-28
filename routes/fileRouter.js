@@ -1,6 +1,10 @@
 import { Router } from "express";
-import { ensureAuth } from "../middleware/authMiddleware.js"; 
-import { completeUpload, downloadFile, getFile, uploadFile } from "../controllers/fileController.js";
+import { ensureAuth } from "../middleware/authMiddleware.js";
+import {
+    completeUpload, deleteFile,
+    downloadFile, getFile,
+    uploadFile
+} from "../controllers/fileController.js";
 import { getMyFiles, createUploadRequest } from "../controllers/fileController.js";
 import { handleFileUpload } from "../middleware/upload.js";
 
@@ -24,5 +28,7 @@ fileRouter.post('/upload-request',
 fileRouter.post('/complete-upload', ensureAuth, completeUpload);
 
 fileRouter.get("/:id/download", ensureAuth, downloadFile);
+
+fileRouter.delete("/:id", ensureAuth, deleteFile)
 
 export default fileRouter;
