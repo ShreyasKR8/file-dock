@@ -43,6 +43,9 @@ This project is based on the [File Uploader project](https://www.theodinproject.
 
 The project is currently under development. Setup and installation instructions will be added as the project progresses.
 
+Start the app with `npm start`; it builds the browser upload bundle automatically.
+If running `node app.js` directly, run `npm run build:client` first (including after pulling frontend changes).
+
 ## License
 
 This project is licensed under the MIT License.
