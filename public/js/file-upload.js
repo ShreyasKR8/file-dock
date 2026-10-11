@@ -40,6 +40,14 @@ uploadForm.addEventListener("submit", async (event) => {
             );
         }
 
+        const bucketName = window.SUPABASE_BUCKET;
+
+        if(!bucketName) {
+            throw new Error(
+                errorData?.error ?? `(${response.status}).`
+            );
+        } 
+
         const { storagePath, token } = await response.json();
 
         const upload = new tus.Upload(file, {
@@ -53,7 +61,7 @@ uploadForm.addEventListener("submit", async (event) => {
             },
 
             metadata: {
-                bucketName: "files",
+                bucketName: bucketName,
                 objectName: storagePath,
                 contentType: file.type,
                 cacheControl: "3600",

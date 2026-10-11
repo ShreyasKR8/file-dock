@@ -26,6 +26,7 @@ export const getMyFiles = async (req, res) => {
         files: rootFiles,
         maxFileSize: MAX_FILE_SIZE,
         supabaseProjectId: projectId,
+        supabaseBucket: process.env.SUPABASE_BUCKET,
     });
 };
 

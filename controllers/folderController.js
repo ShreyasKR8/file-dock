@@ -97,6 +97,7 @@ export const getFolder = async (req, res) => {
         folders: [],
         maxFileSize: MAX_FILE_SIZE,
         supabaseProjectId: new URL(process.env.SUPABASE_URL).hostname.split(".")[0],
+        supabaseBucket: process.env.SUPABASE_BUCKET
     });
 };
 
