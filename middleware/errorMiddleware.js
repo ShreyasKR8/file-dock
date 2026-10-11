@@ -3,6 +3,10 @@ import { getFilesInRoot } from "../db/fileQueries.js";
 import { MAX_FILE_SIZE } from "../config/constants.js";
 
 export const handleUploadError = async (err, req, res, next) => {
+    if (!["LIMIT_FILE_SIZE", "INVALID_FILE_TYPE"].includes(err.code)) {
+        return next(err);
+    }
+
     let message = "File upload failed.";
 
     if (err.code === "LIMIT_FILE_SIZE") {
