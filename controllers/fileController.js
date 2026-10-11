@@ -63,7 +63,7 @@ export const getFile = async (req, res) => {
     res.render("file", { file: fileDetails });
 };
 
-export const downloadFile = async (req, res) => {
+export const downloadFile = async (req, res, next) => {
     try {
         const fileId = Number(req.params.id);
         if (isNaN(fileId)) {
@@ -76,8 +76,14 @@ export const downloadFile = async (req, res) => {
             return res.status(404).send("File not found");
         }
 
+        const bucket = process.env.SUPABASE_BUCKET;
+
+        if(!bucket) {
+            return res.status(400).send("Invalid supabase bucket name");
+        } 
+
         const { data, error } = await supabase.storage
-            .from('files')
+            .from(bucket)
             .createSignedUrl(file.storageKey, 60,
                 {
                     download: file.name,
@@ -251,8 +257,14 @@ export const deleteFile = async (req, res, next) => {
 
         const storagePath = file.storageKey;
 
+        const bucket = process.env.SUPABASE_BUCKET;
+
+        if(!bucket) {
+            return res.status(400).send("Supabase bucket name not specified");
+        }
+
         const { error } = await supabase.storage
-        .from('files')
+        .from(bucket)
         .remove([storagePath]);
 
         if(error) {
