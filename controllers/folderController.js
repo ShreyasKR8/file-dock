@@ -1,8 +1,9 @@
 import { MAX_FILE_SIZE } from "../config/constants.js";
+import supabase from "../config/supabase.js";
 import { getFilesByFolderId } from "../db/fileQueries.js";
 import {
     createFolder,
-    deleteFolderByUser,
+    deleteFolderWithFiles,
     getFolderById,
     getFoldersByUser,
     updateFolderName
@@ -139,7 +140,26 @@ export const deleteFolder = async (req, res) => {
         return res.status(400).send('Invalid folder ID');
     }
 
-    await deleteFolderByUser(folderId, req.user.id);
+    const files = await getFilesByFolderId(folderId, req.user.id);
+    
+    const storagePaths = files.map(file => file.storageKey);
+    if(storagePaths.length > 0) {
+        const { error } = await supabase.storage
+        .from(process.env.SUPABASE_BUCKET)
+        .remove(storagePaths);
+
+        if(error) {
+            return res.status(500).send(`Failed to delete folder contents: ${error}`);
+        }
+    }
+    
+    try {
+        await deleteFolderWithFiles(folderId, req.user.id);
+
+        return res.redirect("/");
+    } catch (error) {
+        next(error);
+    }
 
     res.redirect("/files");
 };

@@ -46,3 +46,26 @@ export const deleteFolderByUser = async (folderId, userId) => {
         }
     });
 };
+
+export const deleteFolderWithFiles = async(folderId, userId) => {
+    return prisma.$transaction(async(tx) => {
+        const folder = await tx.folder.findFirst({
+            where:{
+                id: folderId,
+                userId,
+            }
+        });
+
+        if(!folder) {
+            throw new Error("Folder not found");
+        }
+
+        await tx.file.deleteMany({
+            where: { folderId, userId }
+        });
+
+        await tx.folder.delete({
+            where: { id: folderId }
+        });
+    });
+};
