@@ -69,3 +69,13 @@ export const deleteFolderWithFiles = async(folderId, userId) => {
         });
     });
 };
+
+export const createShareLink = async (folderId, tokenHash, expiresAt) => {
+    return prisma.folderShareLink.create({
+        data: {
+            folderId, 
+            tokenHash,
+            expiresAt,
+        }
+    });
+}

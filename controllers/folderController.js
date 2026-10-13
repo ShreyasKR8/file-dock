@@ -6,9 +6,13 @@ import {
     deleteFolderWithFiles,
     getFolderById,
     getFoldersByUser,
-    updateFolderName
+    updateFolderName,
+    createShareLink,
 } from "../db/folderQueries.js";
 import { body, validationResult } from "express-validator";
+import { randomBytes, createHash } from "node:crypto";
+
+const allowedDurations = [1, 7, 30];
 
 export const validateFolder = [
     body("name")
@@ -163,3 +167,52 @@ export const deleteFolder = async (req, res) => {
 
     res.redirect("/files");
 };
+
+export const createFolderShareLink = async (req, res) => {
+
+    const folderId = Number(req.params.id);
+    if (isNaN(folderId)) {
+        console.log("NAN folder")
+        return res.status(400).send('Invalid folder ID');
+    }
+
+    // folder ownership check
+    const folder = await getFolderById(folderId, req.user.id);
+    if (!folder) {
+        console.log("folder ownership check")
+        return res.status(404).send("Folder not found");
+    }
+
+    // Generate a secure random token
+    const token = randomBytes(32).toString("base64url");
+
+    // Hash the token before storing it
+    const tokenHash = createHash("sha256")
+        .update(token)
+        .digest("hex");
+
+
+    const validDuration = Number(req.body.validDuration);
+    if (!allowedDurations.includes(validDuration)) {
+        console.log("allowed durartion")
+        return res.status(400).send("Invalid link duration");
+    }
+    
+    const expiresAt = new Date(
+        Date.now() + validDuration * 24 * 60 * 60 * 1000
+    );
+
+    const linkRecord = await createShareLink(folderId, tokenHash, expiresAt);
+    if(!linkRecord) {
+        console.log("link create failed")
+        return res.status(400).send('Link creation failed');
+    }
+
+    const shareLink = new URL(`/shared/${token}`, "http://localhost:3000").toString();
+
+    //Todo: temp return json, show the link later
+    return res.status(201).json({
+        link: shareLink,
+        expiresAt
+    });
+}
