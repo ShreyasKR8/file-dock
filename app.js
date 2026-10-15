@@ -11,6 +11,7 @@ import fileRouter from "./routes/fileRouter.js";
 import folderRouter from "./routes/folderRouter.js";
 import methodOverride from "method-override";
 import { handleUploadError } from "./middleware/errorMiddleware.js";
+import sharedRouter from "./routes/sharedRouter.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,6 +68,7 @@ app.get("/", (req, res) => {
 app.use('/auth', authRouter);
 app.use('/files', fileRouter);
 app.use('/folders', folderRouter);
+app.use('/shared', sharedRouter);
 
 app.use(handleUploadError);
 
