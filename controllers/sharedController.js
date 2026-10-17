@@ -17,7 +17,7 @@ export const getSharedFolder = async (req, res) => {
         title: folder.name? folder.name : "Shared folder",  
         folder,
         files,
-        token,
+        token: req.params.token,
     });
 };
 
