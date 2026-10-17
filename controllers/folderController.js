@@ -138,7 +138,7 @@ export const renameFolder = [
     }
 ];
 
-export const deleteFolder = async (req, res) => {
+export const deleteFolder = async (req, res, next) => {
     const folderId = Number(req.params.id);
     if (isNaN(folderId)) {
         return res.status(400).send('Invalid folder ID');
