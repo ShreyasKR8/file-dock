@@ -79,9 +79,9 @@ export const downloadFile = async (req, res, next) => {
 
         const bucket = process.env.SUPABASE_BUCKET;
 
-        if(!bucket) {
-            return res.status(400).send("Invalid supabase bucket name");
-        } 
+        if (!bucket) {
+            throw new Error("SUPABASE_BUCKET is not configured");
+        }
 
         const { data, error } = await supabase.storage
             .from(bucket)
