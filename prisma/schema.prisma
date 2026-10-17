@@ -13,14 +13,14 @@ datasource db {
 }
 
 model User {
-    id           Int      @id @default(autoincrement())
-    firstName    String   @map("first_name")
-    lastName     String   @map("last_name")
-    email        String   @unique
-    passwordHash String   @map("password_hash")
+    id           Int    @id @default(autoincrement())
+    firstName    String @map("first_name")
+    lastName     String @map("last_name")
+    email        String @unique
+    passwordHash String @map("password_hash")
 
-    folders      Folder[]
-    files        File[]
+    folders Folder[]
+    files   File[]
 
     @@map("users")
 }
@@ -40,8 +40,8 @@ model Folder {
     userId    Int      @map("user_id")
     createdAt DateTime @default(now()) @map("created_at")
 
-    user      User     @relation(fields: [userId], references: [id])
-    files     File[]
+    user       User              @relation(fields: [userId], references: [id])
+    files      File[]
     shareLinks FolderShareLink[]
 
     @@unique([userId, name])
@@ -49,28 +49,28 @@ model Folder {
 }
 
 model File {
-    id Int @id @default(autoincrement())
-    name String
-    storageKey String @map("storage_key")
-    mimeType String @map("mime_type")
-    size Int
-    createdAt DateTime @default(now()) @map("created_at")
+    id         Int      @id @default(autoincrement())
+    name       String
+    storageKey String   @map("storage_key")
+    mimeType   String   @map("mime_type")
+    size       Int
+    createdAt  DateTime @default(now()) @map("created_at")
 
-    userId Int @map("user_id")
-    user User @relation(fields: [userId], references: [id])
+    userId Int  @map("user_id")
+    user   User @relation(fields: [userId], references: [id])
 
-    folderId Int? @map("folder_id")
-    folder Folder? @relation(fields: [folderId], references: [id])
+    folderId Int?    @map("folder_id")
+    folder   Folder? @relation(fields: [folderId], references: [id])
 
     @@map("files")
 }
 
 model FolderShareLink {
-    id Int @id @default(autoincrement())
+    id        Int    @id @default(autoincrement())
     tokenHash String @unique @db.Char(64)
 
-    folderId Int? @map("folder_id")
-    folder Folder? @relation(fields: [folderId], references: [id])
+    folderId Int    @map("folder_id")
+    folder   Folder @relation(fields: [folderId], references: [id], onDelete: Cascade)
 
     createdAt DateTime @default(now()) @map("created_at")
     expiresAt DateTime @map("expires_at")
