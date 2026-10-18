@@ -26,9 +26,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm run build:client",
     "start": "node app.js",
     "build:client": "esbuild public/js/file-upload.js --bundle --outfile=public/dist/file-upload.js",
+    "db:generate": "prisma generate",
+    "db:deploy": "prisma migrate deploy",
+    "build": "npm run db:generate && npm run build:client",
+    "dev:client": "npm run build:client -- --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
