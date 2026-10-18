@@ -208,7 +208,7 @@ export const createFolderShareLink = async (req, res) => {
         return res.status(400).send('Link creation failed');
     }
 
-    const shareLink = new URL(`/shared/${token}`, "http://localhost:3000").toString();
+    const shareLink = new URL(`/shared/${token}`, process.env.APP_URL).toString();
 
     //Todo: temp return json, show the link later
     return res.status(201).json({
