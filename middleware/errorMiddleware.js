@@ -19,7 +19,7 @@ export const handleUploadError = async (err, req, res, next) => {
 
     // load whatever my-files.ejs needs
     const folders = await getFoldersByUser(req.user.id);
-    const files = await getFilesInRoot();
+    const files = await getFilesInRoot(req.user.id);
     const supabaseProjectId = new URL(process.env.SUPABASE_URL)
     .hostname
     .split(".")[0];

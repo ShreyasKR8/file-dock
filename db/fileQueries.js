@@ -6,10 +6,11 @@ export const createFile = async (fileData) => {
     })
 };
 
-export const getFilesInRoot = async () => {
+export const getFilesInRoot = async (userId) => {
     return prisma.file.findMany({
         where: {
             folderId: null,
+            userId,
         }
     });
 };

@@ -15,7 +15,7 @@ import supabase from "../config/supabase.js";
 
 export const getMyFiles = async (req, res) => {
     const folders = await getFoldersByUser(req.user.id);
-    const rootFiles = await getFilesInRoot();
+    const rootFiles = await getFilesInRoot(req.user.id);
 
     const supabaseUrl = process.env.SUPABASE_URL;
     const projectId = new URL(supabaseUrl).hostname.split(".")[0];
