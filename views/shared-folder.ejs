@@ -10,13 +10,17 @@
 </head>
 
 <body>
-    <h1>
-        <%= title %>
-    </h1>
-    <div class="files-folders">
+    <%- include("partials/header") %>
+    <main id="main-content" class="page-shell">
+    <div class="page-heading"><p class="eyebrow">Shared with you</p><h1 class="page-title"><%= title %></h1><p class="page-copy">Browse and download the files in this shared folder.</p></div>
+    <section class="library"><div class="section-header"><h2 class="section-title">Shared files</h2><span class="count-badge"><%= files.length %> items</span></div>
+        <div class="files-folders">
+            <% if (files.length === 0) { %>
+                <div class="empty-state"><span class="empty-icon" aria-hidden="true">＋</span><h3>No files here yet</h3><p class="meta-text">Files will appear here when the owner adds them.</p></div>
+            <% } %>
         <% files.forEach(file=> { %>
             <div class="file-details">
-                <h1><%= file.name %></h1>
+                <span class="item-kind">File</span><h3><%= file.name %></h3>
                 <p>Type: <%= file.extension %></p>
                 <p>Size: <%= file.size %></p>
                 <p>Uploaded: <%= file.createdAt %></p>
@@ -26,13 +30,9 @@
             </div>
         <% }); %>
     </div>
-    <footer class="site-footer">
-        <a target="_blank" href="https://icons8.com/icon/r8kHwiV6nVEd/cloud-storage">
-            Cloud Storage
-        </a> 
-            icon by 
-        <a target="_blank" href="https://icons8.com">Icons8</a>
-    </footer>
+    </section>
+    </main>
+    <%- include("partials/footer") %>
 </body>
 
 </html>

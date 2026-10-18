@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <title>Sign Up</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="icon" href="/images/group.png"> -->
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
-    <main class="auth-page">
+    <%- include("../partials/header") %>
+    <main id="main-content" class="auth-page">
         <section class="auth-card compact">
             <div class="auth-header">
                 <p class="eyebrow">Create access</p>
                 <h1 class="page-title">Register</h1>
-                <!-- <p class="page-copy">Make your account first, then unlock member status from inside the app.</p> -->
+                <p class="page-copy">Make room for your files. Create your FileDock account.</p>
             </div>
 
             <form method="POST" action="register" id="register-form" novalidate
@@ -29,20 +29,10 @@
                         <label for="lastname">Last Name</label>
                         <input id="lastname" name="lastname" type="text" required value="<%= formData?.lastname || '' %>" />
                     </div>
-                    <!-- <div class="field full-width">
-                        <label for="username">User Name</label>
-                        <input id="username" name="username" type="text" required value="<%= formData?.username || '' %>" />
-                    </div> -->
                     <div class="field full-width">
                         <label for="email">Email</label>
                         <input id="email" name="email" type="email" required value="<%= formData?.email || '' %>" />
                     </div>
-                    <!-- <div class="field full-width checkbox-field">
-                        <label class="checkbox-row" for="admin">
-                            <input type="checkbox" id="admin" name="admin" value="yes" <%= formData?.admin ? 'checked' : '' %>>
-                            <span>Become an Admin</span>
-                        </label>
-                    </div> -->
                     <div class="field">
                         <label for="password">Password</label>
                         <div class="password-input-wrap">
@@ -69,9 +59,7 @@
         </section>
     </main>
     <script src="/js/register-form.js"></script>
-    <footer class="site-footer">
-        <!-- <a href="https://www.flaticon.com/free-icons/members" target="_blank" title="members icons">Members icons created by Irfansusanto20 - Flaticon</a> -->
-    </footer>
+    <%- include("../partials/footer") %>
 </body>
 
 </html>

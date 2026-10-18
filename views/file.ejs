@@ -10,22 +10,21 @@
 </head>
 
 <body>
+    <%- include("partials/header") %>
+    <main id="main-content" class="page-shell">
     <% if (locals.currentUser != null) { %>
+        <div class="page-heading"><p class="eyebrow">Your workspace</p><h1 class="page-title">File details</h1></div>
         <div class="file-details">
-            <h1><%= file.name %></h1>
+            <span class="item-kind">File</span>
+            <h2><%= file.name %></h2>
             <p>Type: <%= file.extension %></p>
             <p>Size: <%= file.size %></p>
             <p>Uploaded: <%= file.createdAt %></p>
             <a href="/files/<%= file.id %>/download">Download</a>
         </div>
     <% } %>
-    <a href="/files">Go Back</a>
-    <footer class="site-footer">
-        <a target="_blank" href="https://icons8.com/icon/r8kHwiV6nVEd/cloud-storage">
-            Cloud Storage
-        </a> 
-            icon by 
-        <a target="_blank" href="https://icons8.com">Icons8</a>
-    </footer>
+    <a class="btn btn-secondary back-link" href="/files">← Back to my files</a>
+    </main>
+    <%- include("partials/footer") %>
 </body>
 </html>

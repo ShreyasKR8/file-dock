@@ -1,0 +1,16 @@
+<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="topbar">
+    <a class="brand" href="/" aria-label="FileDock home">
+        <span class="brand-icon" aria-hidden="true"><img src="/images/icons8-cloud-storage-48.png" alt="" width="32" height="32"></span>
+        <span>FileDock<span class="brand-tagline">A home for your files</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+        <% if (locals.currentUser != null) { %>
+            <a class="btn btn-secondary" href="/files">My files</a>
+            <a class="btn btn-quiet" href="/auth/logout">Log out</a>
+        <% } else { %>
+            <a class="btn btn-quiet" href="/auth/login">Log in</a>
+            <a class="btn btn-primary" href="/auth/register">Get started</a>
+        <% } %>
+    </nav>
+</header>

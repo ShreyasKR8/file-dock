@@ -1,22 +1,26 @@
+<section class="upload-panel" aria-labelledby="upload-title">
+<div class="upload-heading"><span class="upload-icon" aria-hidden="true">↑</span><div><h2 id="upload-title">Give your files a home</h2><p class="meta-text">Choose a file up to <%= Math.round(maxFileSize / (1024 * 1024)) %> MB.</p></div></div>
 <form id="upload-form" data-folder-id="<%= currentFolderId ?? '' %>">
-    <label for="file-input">Choose file</label>
+    <div class="field upload-file"><label for="file-input">Choose a file</label>
     <input type="file" id="file-input" 
         name="file" 
         data-max-file-size="<%= maxFileSize %>" 
         required>
+    </div>
 
     <% if(showFolderSelect) { %>
-        <select name="folderId" class="folder-select">
-            <option value="">MyFiles</option>
+        <div class="field upload-destination"><label for="upload-folder">Save to</label>
+        <select id="upload-folder" name="folderId" class="folder-select">
+            <option value="">My files</option>
             <% folders.forEach(folder=> { %>
                 <option value="<%= folder.id %>">
                     <%= folder.name %>
                 </option>
                 <% }) %>
-        </select>
+        </select></div>
     <% } %>
 
-    <% if (locals.uploadErrors) { %>
+    <% if (locals.uploadErrors?.length) { %>
         <div class="form-errors" role="alert">
             <% uploadErrors.forEach(error=> { %>
                 <p>
@@ -27,8 +31,9 @@
     <% } %>
 
     <p id="upload-error" class="form-errors" role="alert" hidden></p>
-    <button type="submit">Upload</button>
+    <button class="btn btn-primary" type="submit">Upload file ↑</button>
 </form>
+</section>
 
 <script>
     window.SUPABASE_PROJECT_ID = <%- JSON.stringify(supabaseProjectId) %>;

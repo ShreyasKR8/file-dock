@@ -10,7 +10,9 @@
 </head>
 
 <body>
-    <h1><%= title %></h1>
+    <%- include("partials/header") %>
+    <main id="main-content" class="page-shell">
+    <div class="page-heading"><p class="eyebrow">Your workspace</p><h1 class="page-title"><%= title %></h1><p class="page-copy">Everything you need, right where you left it.</p></div>
     <% if (locals.currentUser != null) { %>
 
         <%- include("partials/file-upload-form", {
@@ -21,10 +23,14 @@
             supabaseBucket
         }) %>
 
+        <section class="library"><div class="section-header"><h2 class="section-title">Files & folders</h2><span class="count-badge"><%= files.length + folders.length %> items</span></div>
         <div class="files-folders">
+            <% if (files.length === 0 && folders.length === 0) { %>
+                <div class="empty-state"><span class="empty-icon" aria-hidden="true">＋</span><h3>No files here yet</h3><p class="meta-text">Upload your first file to give it a home.</p></div>
+            <% } %>
             <% files.forEach(file => { %>
                 <div class="file">
-                    <p><%= file.name %></p>
+                    <span class="item-kind">File</span><p class="item-name"><%= file.name %></p>
                     <a href="/files/<%= file.id %>">View Details</a>
                     <form action="/files/<%= file.id %>?_method=DELETE" method="POST">
                         <button type="submit">Delete</button>
@@ -33,6 +39,7 @@
             <% }); %>
             <% folders.forEach(folder => { %>
                 <div class="folder">
+                    <span class="item-kind">Folder</span>
                     <a href=""><%= folder.name %></a>
                     <button type="button" class="edit-folder-btn">Edit</button>
                     <dialog class="edit-folder-dialog"
@@ -41,16 +48,16 @@
                         <form action="/folders/<%= folder.id %>?_method=PATCH" method="POST">
                             <h2>Edit Folder Name</h2>
     
-                            <label for="folder-name">Folder name</label>
+                            <label for="folder-name-<%= folder.id %>">Folder name</label>
                             <input
                                 type="text"
-                                id="folder-name"
+                                id="folder-name-<%= folder.id %>"
                                 name="name"
                                 value="<%= locals.formData?.name ?? '' %>"
                                 required
                             >
     
-                            <% if (locals.errors) { %>
+                            <% if (locals.errors?.length) { %>
                                 <div class="form-errors" role="alert">
                                     <% locals.errors.forEach(error => { %>
                                         <p><%= error.msg %></p>
@@ -74,14 +81,10 @@
                 </div>
             <% }); %>
         </div>
+        </section>
     <% } %>
-    <a href="/files">Go Back</a>
-    <footer class="site-footer">
-        <a target="_blank" href="https://icons8.com/icon/r8kHwiV6nVEd/cloud-storage">
-            Cloud Storage
-        </a> 
-            icon by 
-        <a target="_blank" href="https://icons8.com">Icons8</a>
-    </footer>
+    <a class="btn btn-secondary back-link" href="/files">← Back to my files</a>
+    </main>
+    <%- include("partials/footer") %>
 </body>
 </html>

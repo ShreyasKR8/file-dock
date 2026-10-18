@@ -8,28 +8,35 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <main>
-        <div class="hero-actions">
-        <% if (locals.currentUser == null) { %>
-                <a class="btn btn-primary" href="/auth/register">Create an account</a>
-                <a class="btn btn-secondary" href="/auth/login">Log In</a>
-        <% } else { %>
-            <a class="btn btn-secondary" href="/auth/logout">Logout</a>
-        <% } %>
-        </div>
-        <h1><%= title %></h1>
-        <p>Upload, organize, and access your files from one calm little dock.</p>
-        <% if (locals.currentUser != null) { %>
-            <h3>Browse your files: </h3>
-            <a href="/files">MyFiles</a>
-        <% } %>
+    <%- include("partials/header") %>
+    <main id="main-content" class="page-shell landing-page">
+        <section class="hero-card">
+            <div class="hero-content">
+                <p class="eyebrow">Less clutter. More clarity.</p>
+                <h1 class="hero-title">Your files.<br>Your little dock.</h1>
+                <p class="hero-copy">Upload, organize, and access your files from one calm little dock. A simple space for the things you want to keep close.</p>
+                <div class="hero-actions">
+                    <% if (locals.currentUser != null) { %>
+                        <a class="btn btn-primary" href="/files">Open my files <span aria-hidden="true">↗</span></a>
+                    <% } else { %>
+                        <a class="btn btn-primary" href="/auth/register">Create an account <span aria-hidden="true">↗</span></a>
+                        <a class="btn btn-secondary" href="/auth/login">Log in</a>
+                    <% } %>
+                </div>
+            </div>
+            <div class="dock-illustration" aria-hidden="true">
+                <div class="illustration-label">EVERYTHING IN ITS PLACE</div>
+                <div class="paper paper-back"></div><div class="paper paper-front"><span></span><span></span><span></span></div>
+                <div class="illustrated-folder"><span>filedock /</span><strong>A little space.<br>A clearer mind.</strong></div>
+                <div class="illustration-caption">Store it. Find it. Share it.</div>
+            </div>
+        </section>
+        <!-- <section class="features" aria-label="What you can do with FileDock">
+            <article><span class="feature-number">01 / UPLOAD</span><h2>A place to land</h2><p>Bring your files together in one easy-to-access space.</p></article>
+            <article><span class="feature-number">02 / ORGANIZE</span><h2>Room for order</h2><p>Create folders that make sense for the way you work.</p></article>
+            <article><span class="feature-number">03 / SHARE</span><h2>Pass it along</h2><p>Share a folder with a link and choose how long it lasts.</p></article>
+        </section> -->
     </main>
-    <footer class="site-footer">
-        <a target="_blank" href="https://icons8.com/icon/r8kHwiV6nVEd/cloud-storage">
-            Cloud Storage
-        </a> 
-            icon by 
-        <a target="_blank" href="https://icons8.com">Icons8</a>
-    </footer>
+    <%- include("partials/footer") %>
 </body>
 </html>

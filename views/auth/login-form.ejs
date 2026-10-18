@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <title>Log In</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <link rel="icon" href="/images/group.png"> -->
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <main class="auth-page">
+    <%- include("../partials/header") %>
+    <main id="main-content" class="auth-page">
         <section class="auth-card">
             <div class="auth-header">
                 <p class="eyebrow">Welcome back</p>
                 <h1 class="page-title">Log in</h1>
-                <!-- <p class="page-copy">Step back into the board and pick up the conversation.</p> -->
+                <p class="page-copy">Your files are right where you left them.</p>
             </div>
 
             <form action="/auth/login" method="POST" id="login-form">
@@ -46,8 +46,6 @@
         </section>
     </main>
     <script src="/js/login-form.js"></script>
-    <footer class="site-footer">
-        <!-- <a href="https://www.flaticon.com/free-icons/members" target="_blank" title="members icons">Members icons created by Irfansusanto20 - Flaticon</a> -->
-    </footer>
+    <%- include("../partials/footer") %>
 </body>
 </html>
