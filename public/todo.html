@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checklist</title>
+<style>
+:root{color-scheme:light;--ink:#302d28;--muted:#716b61;--line:#e3ded4;--brand:#a7472a;--paper:#fffefa}
+*{box-sizing:border-box}body{margin:0;background:#f7f5f0;color:var(--ink);font:15px/1.6 system-ui,sans-serif}main{max-width:960px;margin:auto;padding:48px 24px 64px}header{margin-bottom:28px}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--brand);font-weight:700}h1{font:clamp(36px,6vw,56px)/1.1 Georgia,serif;letter-spacing:-1.5px;margin:12px 0 16px}p{margin:8px 0;color:var(--muted)}.summary{padding:24px;background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:28px 0}.summary-top{display:flex;justify-content:space-between;gap:16px;align-items:center}.summary strong{font-size:22px}progress{display:block;width:100%;height:10px;margin:18px 0 12px;accent-color:var(--brand);border:0;border-radius:12px;overflow:hidden}progress::-webkit-progress-bar{background:#ece6db}progress::-webkit-progress-value{background:var(--brand)}progress::-moz-progress-bar{background:var(--brand)}.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:28px}select,button{font:inherit;background:var(--paper);border:1px solid #cfc6b9;padding:10px 14px;border-radius:8px;color:var(--ink);min-height:44px}button,select,input{cursor:pointer}button:hover{background:#efe6da}.toolbar label{font-size:13px;font-weight:600}.toolbar select{margin-left:8px}.toolbar button{margin-left:auto}section{margin-bottom:32px}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px}h2{font-size:19px;margin:0}.badge{display:inline-block;font-size:11px;letter-spacing:.5px;padding:4px 9px;border-radius:6px;background:#f3e2d7;color:#893c25;margin-right:9px}.count{white-space:nowrap;font-size:12px;color:var(--muted)}.section-description{font-size:14px;margin-bottom:16px}.task{padding:18px 20px;background:var(--paper);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start}.task input{width:20px;height:20px;margin:4px 0;accent-color:var(--brand)}.task label{display:block;font-weight:650;cursor:pointer;min-height:28px}.task p{font-size:14px;margin:5px 0 0}.task.done{background:#eeefe7}.task.done label{text-decoration:line-through;color:#65675d}.task code{overflow-wrap:anywhere;font-size:12px}.task small{display:block;margin-top:8px;color:#53644e;font-size:12px}.empty{padding:24px;border:1px dashed var(--line);border-radius:10px;text-align:center}footer{border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:12px}:focus-visible{outline:3px solid var(--brand);outline-offset:4px}[hidden]{display:none!important}#storage-warning{color:#913728;background:#fff0e7;padding:12px;border-radius:8px}@media(max-width:540px){main{padding:30px 16px}.toolbar{align-items:stretch;flex-direction:column}.toolbar label{display:flex;justify-content:space-between;align-items:center}.toolbar select{width:65%}.toolbar button{margin:0}.task{padding:16px}.summary-top{align-items:start;flex-direction:column}.section-heading{align-items:start}h2{font-size:17px}}
+</style>
+</head>
+<body>
+<main>
+<header><span class="eyebrow">FileDock / The Odin Project</span><h1>A little more complete.</h1><p>Your learning-project checklist. Finish the core flows, make errors understandable, then choose the polish that matters to you.</p></header>
+<div class="summary"><div class="summary-top"><strong id="overall">0 tasks complete</strong><span id="percentage">0%</span></div><progress id="progress" value="0" max="22" aria-label="Overall checklist completion"></progress><p id="milestone" aria-live="polite"></p></div>
+<p id="storage-warning" role="alert" hidden>Browser storage is unavailable. Changes will last only for this session; use Export progress to keep a copy.</p>
+<div class="toolbar"><label>Priority<select id="priority"><option value="all">All priorities</option><option value="P1">P1 · Core functionality</option><option value="P2">P2 · Reliability</option><option value="P3">P3 · Polish</option><option value="P4">P4 · Optional later</option></select></label><label>Status<select id="status"><option value="all">All tasks</option><option value="open">To do</option><option value="done">Completed</option></select></label><button id="export" type="button">Export progress ↓</button></div>
+<div id="tasks"></div>
+<noscript><p>Enable JavaScript to view and track this checklist.</p></noscript>
+<footer>Source paths are relative to the repository root; line numbers reflect this review and may shift after edits. Progress saves automatically in this browser. It does not sync between devices, update app code, or verify a fix. P4 tasks are optional production-engineering exercises.</footer>
+</main>
+<script>
+const groups = [
+{priority:'P1',title:'Core functionality',description:'Fix before calling the project complete. These matter even with two test accounts.',tasks:[
+['user-files','Show only the logged-in user’s files','Require the current user ID in the root-file query and update every caller. Test with two accounts: neither should see the other’s files.'],
+['upload-ownership','Validate ownership when completing an upload','Verify that the storage key belongs to an upload authorized for the current user, and validate its metadata. Reject arbitrary keys; keep the implementation simple.'],
+['folder-render','Fix folder validation rendering','Define and pass the project ID, files, and Supabase bucket on create/rename error paths. Invalid names should show an error instead of crashing the page.'],
+['registration-response','Respond when registration fails','Replace the logging-only catch block with a response or next(error). Database failures must not leave a request hanging.'],
+['login-feedback','Explain failed login attempts','Show a generic “Incorrect email or password” message and retain the entered email so users can correct it.'],
+['share-errors','Show share-link generation failures','Catch failed requests and display a simple message inside the dialog. An inline paragraph is enough.'],
+['close-dialog','Fix the generated-link Close button','Update the handler to close the generated-link dialog rather than the already-closed share dialog.'],
+['folder-links','Use absolute folder links','Use /folders/<id> links so navigation works from /files/, as well as pages rendered after validation errors.']
+]},
+{priority:'P2',title:'Reliability & useful feedback',description:'Make ordinary use predictable. Small, focused solutions are enough.',tasks:[
+['dialog-errors','Display folder errors in the correct dialog','Identify the failed operation and folder, open only that dialog, and retain its submitted value. Prefill normal rename forms with the current folder name.'],
+['duplicate-folder','Explain duplicate folder names','Catch the database uniqueness error and show “You already have a folder with this name” in the relevant form.'],
+['general-errors','Add a simple general error handler','Log unexpected errors and send a friendly HTML page or JSON response as appropriate. One basic handler is sufficient.'],
+['session-expiry','Handle session expiry during uploads and sharing','Return 401 JSON responses for these requests and tell users to log in again. Never interpret redirected login HTML as successful API output.'],
+['upload-config','Fix missing upload-configuration handling','Remove the out-of-scope errorData reference and handle missing bucket or project configuration with a clear upload-unavailable message.'],
+['upload-progress','Prevent repeated uploads and show progress','Disable submission while uploading, capture the destination folder at the start, and display a simple uploading or progress indicator.'],
+['legacy-route','Remove the unused local-upload route','If Supabase is the supported implementation, retire the old local-storage endpoint and its unused handling rather than maintaining two storage systems.'],
+['delete-return','Stop execution after forwarding deletion errors','Return immediately after next(error) so folder deletion cannot also attempt a redirect. Advanced recovery is a separate task.'],
+['validate-ids','Validate route IDs as positive integers','Reject malformed, fractional, or infinite IDs before database queries. A small shared helper is enough.']
+]},
+{priority:'P3',title:'Finishing touches',description:'Useful polish once the main flows work. Choose what helps your demonstration.',tasks:[
+['shared-metadata','Make shared-file metadata readable','Display the file type correctly and use consistent human-readable sizes and dates in shared and private file views.'],
+['inline-registration','Replace registration alerts with inline errors','Keep errors visible beside inputs or in a summary while the user corrects the form.'],
+['nested-markup','Remove dormant nested-folder markup','Nested folders are not implemented. Remove unused controls and empty links instead of expanding the scope now.'],
+['success-feedback','Improve success feedback and return destinations','After uploading or deleting, return users to a relevant file listing. Optionally show a small success message.']
+]},
+{priority:'P4',title:'Optional production exercises',description:'Document these limitations for now. They do not need to block finishing the project.',tasks:[
+['delete-recovery','Recover automatically from partial deletion','Later, add retries or reconciliation when storage deletion succeeds but the database operation fails. For now, report the failure clearly.'],
+['orphan-cleanup','Clean up orphaned uploads automatically','Consider scheduled cleanup for stored objects whose database save failed. Manual cleanup is acceptable for this learning project.'],
+['retry-safe','Make upload completion fully retry-safe','Later, prevent duplicates across interrupted requests and network retries. Basic submission protection is enough for the initial milestone.']
+]}
+];
+const sourceRefs = {
+  "user-files": [
+    "db/fileQueries.js:9",
+    "controllers/fileController.js:18",
+    "middleware/errorMiddleware.js:22"
+  ],
+  "upload-ownership": [
+    "controllers/fileController.js:145",
+    "services/storageService.js:6"
+  ],
+  "folder-render": [
+    "controllers/folderController.js:48",
+    "controllers/folderController.js:116",
+    "views/my-files.ejs:17"
+  ],
+  "registration-response": [
+    "controllers/authController.js:96"
+  ],
+  "login-feedback": [
+    "routes/authRouter.js:17",
+    "config/passport.js:12",
+    "views/auth/login-form.ejs:16"
+  ],
+  "share-errors": [
+    "public/js/folders.js:90",
+    "controllers/folderController.js:171"
+  ],
+  "close-dialog": [
+    "public/js/folders.js:115"
+  ],
+  "folder-links": [
+    "views/my-files.ejs:69"
+  ],
+  "dialog-errors": [
+    "views/my-files.ejs:25",
+    "views/my-files.ejs:77",
+    "public/js/folders.js:20"
+  ],
+  "duplicate-folder": [
+    "prisma/schema.prisma:47",
+    "controllers/folderController.js:41",
+    "controllers/folderController.js:109"
+  ],
+  "general-errors": [
+    "app.js:73",
+    "middleware/errorMiddleware.js:5"
+  ],
+  "session-expiry": [
+    "middleware/authMiddleware.js:1",
+    "public/js/file-upload.js:23",
+    "public/js/file-upload.js:115",
+    "public/js/folders.js:93"
+  ],
+  "upload-config": [
+    "public/js/file-upload.js:43",
+    "views/partials/file-upload-form.ejs:41"
+  ],
+  "upload-progress": [
+    "public/js/file-upload.js:10",
+    "public/js/file-upload.js:108",
+    "public/js/file-upload.js:139"
+  ],
+  "legacy-route": [
+    "routes/fileRouter.js:17",
+    "controllers/fileController.js:219",
+    "middleware/errorMiddleware.js:5",
+    "config/multer.js:4"
+  ],
+  "delete-return": [
+    "controllers/folderController.js:164"
+  ],
+  "validate-ids": [
+    "controllers/fileController.js:34",
+    "controllers/folderController.js:85",
+    "controllers/sharedController.js:30"
+  ],
+  "shared-metadata": [
+    "views/shared-folder.ejs:24",
+    "controllers/sharedController.js:14",
+    "controllers/fileController.js:45"
+  ],
+  "inline-registration": [
+    "public/js/register-form.js:11",
+    "public/js/register-form.js:39",
+    "views/auth/register-form.ejs:21"
+  ],
+  "nested-markup": [
+    "views/folder.ejs:40",
+    "controllers/folderController.js:102"
+  ],
+  "success-feedback": [
+    "public/js/file-upload.js:136",
+    "controllers/fileController.js:278",
+    "controllers/folderController.js:163"
+  ],
+  "delete-recovery": [
+    "controllers/fileController.js:267",
+    "controllers/folderController.js:149",
+    "db/folderQueries.js:50"
+  ],
+  "orphan-cleanup": [
+    "public/js/file-upload.js:78",
+    "controllers/fileController.js:178"
+  ],
+  "retry-safe": [
+    "controllers/fileController.js:145",
+    "db/fileQueries.js:3",
+    "prisma/schema.prisma:51"
+  ]
+};
+const storageKey='filedock-learning-checklist-v1';
+let completed={};
+try { const saved=JSON.parse(localStorage.getItem(storageKey)||'{}'); if(saved && typeof saved==='object' && !Array.isArray(saved)) completed=saved; }
+catch { document.getElementById('storage-warning').hidden=false; }
+const allTasks=groups.flatMap(group=>group.tasks);
+const container=document.getElementById('tasks');
+const priority=document.getElementById('priority');
+const status=document.getElementById('status');
+function updateSummary(){
+ const done=allTasks.filter(task=>completed[task[0]]===true).length;
+ const core=groups.slice(0,2).flatMap(group=>group.tasks);
+ const coreDone=core.filter(task=>completed[task[0]]===true).length;
+ document.getElementById('overall').textContent=`${done} of ${allTasks.length} complete`;
+ document.getElementById('percentage').textContent=`${Math.round(done/allTasks.length*100)}%`;
+ const progress=document.getElementById('progress');progress.max=allTasks.length;progress.value=done;
+ document.getElementById('milestone').textContent=coreDone===core.length?'Core milestone complete. Test the main flows with two accounts, then choose your polish.':`Core milestone: ${coreDone} of ${core.length} P1 + P2 tasks complete. Optional work can wait.`;
+}
+function render(){
+ container.replaceChildren();let visible=0;
+ for(const group of groups){
+  if(priority.value!=='all' && priority.value!==group.priority)continue;
+  const filtered=group.tasks.filter(task=>status.value==='all'||(status.value==='done')===(completed[task[0]]===true));
+  if(!filtered.length)continue;
+  visible+=filtered.length;
+  const section=document.createElement('section');
+  const heading=document.createElement('div');heading.className='section-heading';
+  const h2=document.createElement('h2');const badge=document.createElement('span');badge.className='badge';badge.textContent=group.priority;h2.append(badge,group.title);
+  const count=document.createElement('span');count.className='count';count.textContent=`${group.tasks.filter(task=>completed[task[0]]===true).length} / ${group.tasks.length} done`;
+  heading.append(h2,count);const description=document.createElement('p');description.className='section-description';description.textContent=group.description;section.append(heading,description);
+  for(const [id,title,description] of filtered){
+   const card=document.createElement('div');card.className='task'+(completed[id]===true?' done':'');
+   const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.id=id;checkbox.checked=completed[id]===true;checkbox.setAttribute('aria-describedby',id+'-description');
+   const content=document.createElement('div');const label=document.createElement('label');label.htmlFor=id;label.textContent=title;const text=document.createElement('p');text.id=id+'-description';text.textContent=description;content.append(label,text);const sources=document.createElement('small');sources.append('Source: ');for(const [index,ref] of sourceRefs[id].entries()){if(index)sources.append(' · ');const code=document.createElement('code');code.textContent=ref;sources.append(code);}content.append(sources);card.append(checkbox,content);section.append(card);
+   checkbox.addEventListener('change',()=>{
+    completed[id]=checkbox.checked;
+    try{localStorage.setItem(storageKey,JSON.stringify(completed));}catch{document.getElementById('storage-warning').hidden=false;}
+    if(status.value==='all'){card.classList.toggle('done',checkbox.checked);count.textContent=`${group.tasks.filter(task=>completed[task[0]]===true).length} / ${group.tasks.length} done`;updateSummary();}
+    else{render();status.focus();}
+   });
+  }
+  container.append(section);
+ }
+ if(!visible){const empty=document.createElement('p');empty.className='empty';empty.textContent='No tasks match these filters.';container.append(empty);}
+ updateSummary();
+}
+priority.addEventListener('change',render);status.addEventListener('change',render);
+document.getElementById('export').addEventListener('click',()=>{
+ const lines=['# FileDock learning-project checklist','',`Exported ${new Date().toISOString().slice(0,10)}`,''];
+ for(const group of groups){lines.push(`## ${group.priority} — ${group.title}`,'',group.description,'');for(const [id,title,description] of group.tasks)lines.push(`- [${completed[id]===true?'x':' '}] **${title}** — ${description}\n  Source: ${sourceRefs[id].map(ref=>`\`${ref}\``).join(", ")}`);lines.push('');}
+ const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/markdown;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='filedock-checklist.md';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+render();
+</script>
+</body>
+</html>
