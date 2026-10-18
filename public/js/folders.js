@@ -13,6 +13,7 @@ const shareBtns = document.querySelectorAll(".share-folder-btn");
 const shareForm = document.querySelector(".share-folder-form");
 const shareDialog = document.querySelector(".share-dialog");
 const cancelShareBtn = document.querySelector(".cancel-share-folder-btn");
+const showLinkDialog = document.querySelector('.show-link-dialog');
 const closeShowLinkBtn = document.querySelector(".close-show-link-btn");
 
 
@@ -105,7 +106,6 @@ shareForm?.addEventListener("submit", async (e) => {
 
     shareDialog.close();
 
-    const showLinkDialog = document.querySelector(".show-link-dialog");
     showLinkDialog.showModal();
 
     const linkText = document.querySelector(".share-link");
@@ -113,7 +113,7 @@ shareForm?.addEventListener("submit", async (e) => {
 });
 
 closeShowLinkBtn?.addEventListener("click", () => {
-    shareDialog.close();
+    showLinkDialog.close();
 });
 
 //------------xxxxxxxxxxxxxx----------------//
