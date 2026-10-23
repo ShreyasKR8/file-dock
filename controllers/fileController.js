@@ -144,42 +144,34 @@ export const createUploadRequest = async (req, res, next) => {
 
 export const completeUpload = async (req, res, next) => {
     try {
-        // console.log("complete-upload body:", req.body);
-        const folderId = req.body.folderId;
-
-        const normalizedFolderId =
-            folderId === null || folderId === "" || folderId === undefined
-                ? null
-                : Number(folderId);
-
-        if (normalizedFolderId !== null &&
-            !Number.isInteger(normalizedFolderId)) {
-            console.error("failed to normalize folder id");
-            return res.status(400).json({
-                error: "Invalid folder ID.",
+        // verify ownership of storage key
+        const expectedPrefix = `${req.user.id}/`;
+        if(typeof req.body.storageKey !== "string" ||
+            !req.body.storageKey.startsWith(expectedPrefix)
+        ) {
+            return res.status(403).json({
+                error: "Invalid upload path",
             });
         }
 
-        // ensure folder exists and belongs to the current user
-        if (normalizedFolderId !== null) {
-            const folder = await getFolderById(
-                normalizedFolderId,
-                req.user.id
-            );
+        const { storedObject, error: uploadError } = await validateUploadedObject(req.body.storageKey);
+        if (uploadError) {
+            return res.status(400).json({ error: uploadError });
+        }
 
-            if (!folder) {
-                console.error("failed to find folder in db");
-                return res.status(400).json({
-                    error: "Invalid folder.",
-                });
-            }
+        const { folderId: normalizedFolderId, error: folderError } = await validateUploadFolder(
+            req.body.folderId,
+            req.user.id
+        );
+        if (folderError) {
+            return res.status(400).json({ error: folderError });
         }
 
         const fileData = {
             name: req.body.name,
             storageKey: req.body.storageKey,
-            mimeType: req.body.mimeType,
-            size: req.body.size,
+            mimeType: storedObject.contentType,
+            size: storedObject.size,
             userId: req.user.id,
             folderId: normalizedFolderId,
         };
@@ -191,6 +183,48 @@ export const completeUpload = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+const validateUploadedObject = async (storageKey) => {
+    const { data: storedObject, error } = await supabase.storage
+        .from(process.env.SUPABASE_BUCKET)
+        .info(storageKey);
+
+    if (error || !storedObject) {
+        return { error: "Uploaded file could not be found" };
+    }
+
+    if (
+        !storedObject.size ||
+        storedObject.size > MAX_FILE_SIZE ||
+        !ALLOWED_MIME_TYPES.has(storedObject.contentType)
+    ) {
+        return { error: "Uploaded file is invalid." };
+    }
+
+    return { storedObject };
+};
+
+const validateUploadFolder = async (folderId, userId) => {
+    const normalizedFolderId =
+        folderId === null || folderId === "" || folderId === undefined
+            ? null
+            : Number(folderId);
+
+    if (normalizedFolderId !== null && !Number.isInteger(normalizedFolderId)) {
+        console.error("failed to normalize folder id");
+        return { error: "Invalid folder ID." };
+    }
+
+    if (normalizedFolderId !== null) {
+        const folder = await getFolderById(normalizedFolderId, userId);
+        if (!folder) {
+            console.error("failed to find folder in db");
+            return { error: "Invalid folder." };
+        }
+    }
+
+    return { folderId: normalizedFolderId };
 };
 
 const formatFileSize = (bytes) => {
