@@ -5,7 +5,6 @@ import {
     createFolder,
     deleteFolderWithFiles,
     getFolderById,
-    getFoldersByUser,
     updateFolderName,
     createShareLink,
 } from "../db/folderQueries.js";
@@ -43,15 +42,15 @@ export const createFolderPost = [
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            const folders = await getFoldersByUser(req.user.id);
-
-            return res.status(400).render("my-files", {
-                title: "My Files",
-                folders,
+            req.session.formError = {
+                action: "create-folder",
                 errors: errors.array(),
-                formData: req.body,
-                maxFileSize: MAX_FILE_SIZE,
-                supabaseProjectId: projectId,
+                formData: { name: req.body.name },
+            };
+
+            return req.session.save((err) => {
+                if (err) return next(err);
+                return res.redirect(303, "/files");
             });
         }
 
@@ -66,7 +65,7 @@ export const createFolderPost = [
 
             await createFolder(folderData);
 
-            res.redirect('/files');
+            res.redirect(303, "/files");
         } catch (err) {
             console.log(err);
             next(err);
@@ -110,16 +109,18 @@ export const renameFolder = [
     validateFolder,
     async (req, res, next) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const folders = await getFoldersByUser(req.user.id);
 
-            return res.status(400).render("my-files", {
-                title: "My Files",
-                folders,
+        if (!errors.isEmpty()) {
+            req.session.formError = {
+                action: "rename-folder",
+                folderId: String(req.params.id),
                 errors: errors.array(),
-                formData: req.body,
-                maxFileSize: MAX_FILE_SIZE,
-                supabaseProjectId: projectId,
+                formData: { name: req.body.name },
+            };
+
+            return req.session.save((err) => {
+                if (err) return next(err);
+                return res.redirect(303, "/files");
             });
         }
 
@@ -134,7 +135,7 @@ export const renameFolder = [
         const folder = await updateFolderName(
             folderId, req.user.id, req.body.name);
 
-        res.redirect("/files");
+        res.redirect(303, "/files");
     }
 ];
 

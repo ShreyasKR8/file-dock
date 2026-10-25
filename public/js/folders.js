@@ -2,7 +2,6 @@ const createDialog = document.querySelector("#create-folder-dialog");
 const openButton = document.querySelector("#create-folder-btn");
 const cancelButton = document.querySelector("#cancel-folder-btn");
 
-const editDialogs = document.querySelectorAll(".edit-folder-dialog");
 const openEditBtns = document.querySelectorAll(".edit-folder-btn");
 const cancelEditBtns = document.querySelectorAll(".cancel-edit-folder-btn");
 
@@ -18,8 +17,9 @@ const closeShowLinkBtn = document.querySelector(".close-show-link-btn");
 
 
 //-------------- Bind create folder events----------------//
-if (createDialog?.dataset.hasErrors === "true") {
-    createDialog.showModal();
+const errorDialog = document.querySelector('dialog[data-has-errors="true"]');
+if (errorDialog && !errorDialog.open) {
+    errorDialog.showModal();
 }
 
 openButton?.addEventListener("click", () => {
@@ -32,25 +32,27 @@ cancelButton?.addEventListener("click", () => {
 //--------------xxxxxxxxxxxxxxxxxxxxxx----------------//
 
 //---------------- Bind edit folder events -------------//
-editDialogs?.forEach(dialog => {
-    if (dialog?.dataset.hasErrors === "true") {
-        dialog.showModal();
-    }
+document.querySelectorAll('dialog[id^="rename-folder-dialog-"]').forEach(dialog => {
+    dialog.addEventListener("close", () => {
+        const nameInput = dialog.querySelector('input[name="name"]');
+        nameInput.value = dialog.dataset.currentName;
+        dialog.querySelectorAll(".form-errors").forEach(error => error.remove());
+        dialog.dataset.hasErrors = "false";
+    });
 });
 
 openEditBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
-        const folder = btn.closest(".folder"); 
-        const editDialog = folder.querySelector(".edit-folder-dialog");
-        editDialog.showModal();
+        const editDialog = document.getElementById(
+            `rename-folder-dialog-${btn.dataset.folderId}`
+        );
+        if (editDialog && !editDialog.open) editDialog.showModal();
     });
 });
 
 cancelEditBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
-        const folder = btn.closest(".folder"); 
-        const editDialog = folder.querySelector(".edit-folder-dialog");
-        editDialog.close();
+        btn.closest("dialog")?.close();
     });
 });
 //---------------- xxxxxxxxxxxxxxxxxx -------------//
@@ -117,5 +119,4 @@ closeShowLinkBtn?.addEventListener("click", () => {
 });
 
 //------------xxxxxxxxxxxxxx----------------//
-
 

@@ -20,14 +20,23 @@ export const getMyFiles = async (req, res) => {
     const supabaseUrl = process.env.SUPABASE_URL;
     const projectId = new URL(supabaseUrl).hostname.split(".")[0];
 
+    const flash = req.session.formError;
+    delete req.session.formError;
+
     res.render("my-files", {
         title: "My Files",
-        folders: folders,
+        folders,
         files: rootFiles,
         maxFileSize: MAX_FILE_SIZE,
         supabaseProjectId: projectId,
         supabaseBucket: process.env.SUPABASE_BUCKET,
+        errors: flash?.errors ?? [],
+        errorAction: flash?.action ?? null,
+        errorFolderId: flash?.folderId ?? null,
+        formData: flash?.formData ?? {},
     });
+
+
 };
 
 export const getFile = async (req, res) => {

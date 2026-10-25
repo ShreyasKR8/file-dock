@@ -22,8 +22,9 @@
             supabaseBucket
         }) %>
         <button type="button" id="create-folder-btn">Create new folder</button>
+        <% const createHasErrors = errors.length > 0 && errorAction === "create-folder"; %>
         <dialog id="create-folder-dialog" 
-            data-has-errors="<%= locals.errors?.length > 0 %>"
+            data-has-errors="<%= createHasErrors %>"
         >
             <form action="/folders/create" method="POST">
                 <h2>Create new folder</h2>
@@ -33,11 +34,11 @@
                     type="text"
                     id="folder-name"
                     name="name"
-                    value="<%= locals.formData?.name ?? '' %>"
+                    value="<%= createHasErrors ? (formData.name ?? '') : '' %>"
                     required
                 >
 
-                <% if (locals.errors?.length) { %>
+                <% if (createHasErrors) { %>
                     <div class="form-errors" role="alert">
                         <% locals.errors.forEach(error => { %>
                             <p><%= error.msg %></p>
@@ -63,19 +64,25 @@
                     </form>
                 </div>
             <% }); %>
-            <% folders.forEach(folder => { %>
+            <% folders.forEach(folder => {
+                const renameHasErrors = errors.length > 0 &&
+                    errorAction === "rename-folder" &&
+                    String(errorFolderId) === String(folder.id);
+            %>
                 <div class="folder">
                     <span class="item-kind">Folder</span>
                     <a href="/folders/<%= folder.id %>"><%= folder.name %></a>
-                    <button type="button" class="edit-folder-btn">Edit</button>
+                    <button type="button" class="edit-folder-btn" data-folder-id="<%= folder.id %>">Edit</button>
 
                     <button type="button" class="share-folder-btn" 
                     data-folder-id="<%= folder.id %>">
                         Share
                     </button>
 
-                    <dialog class="edit-folder-dialog"
-                        data-has-errors="<%= locals.errors?.length > 0 %>"
+                    <dialog
+                        id="rename-folder-dialog-<%= folder.id %>"
+                        data-current-name="<%= folder.name %>"
+                        data-has-errors="<%= renameHasErrors %>"
                     >
                         <form action="/folders/<%= folder.id %>?_method=PATCH" method="POST">
                             <h2>Edit Folder Name</h2>
@@ -85,11 +92,11 @@
                                 type="text"
                                 id="folder-name-<%= folder.id %>"
                                 name="name"
-                                value="<%= locals.formData?.name ?? '' %>"
+                                value="<%= renameHasErrors ? (formData.name ?? '') : folder.name %>"
                                 required
                             >
     
-                            <% if (locals.errors?.length) { %>
+                            <% if (renameHasErrors) { %>
                                 <div class="form-errors" role="alert">
                                     <% locals.errors.forEach(error => { %>
                                         <p><%= error.msg %></p>
@@ -114,7 +121,7 @@
             <% }); %>
         </div>
         </section>
-        <dialog class="share-dialog" data-has-errors="<%= locals.errors?.length > 0 %>">
+        <dialog class="share-dialog">
             <h3>Share Folder</h3>
             <form class="share-folder-form" method="POST">
                 <label for="validDuration">Link expires after</label>
@@ -123,16 +130,6 @@
                     <option value="7">7 days</option>
                     <option value="30">30 days</option>
                 </select>
-        
-                <% if (locals.errors?.length) { %>
-                    <div class="form-errors" role="alert">
-                        <% locals.errors.forEach(error=> { %>
-                            <p>
-                                <%= error.msg %>
-                            </p>
-                            <% }) %>
-                    </div>
-                <% } %>
         
                 <button type="button" class="cancel-share-folder-btn">Cancel</button>
                 <button type="submit">Generate Link</button>
