@@ -30,14 +30,6 @@ const validateUser = [
         ),
 ];
 
-const validateEmailNotInUse = body('email').custom(async value => {
-    const user = await getUserByEmail(value);
-    if (user) {
-        throw new Error('E-mail already in use');
-    }
-    return true;
-});
-
 const passwordConfirmationValidator = body('confirmpassword')
     .custom((value, { req }) => {
         if (!value) {
@@ -48,7 +40,7 @@ const passwordConfirmationValidator = body('confirmpassword')
             throw new Error('Passwords do not match');
         }
         return true;
-});
+    });
 
 export const registerGet = async (req, res) => {
     res.render('auth/register-form', {
@@ -59,7 +51,6 @@ export const registerGet = async (req, res) => {
 
 export const registerPost = [
     validateUser,
-    validateEmailNotInUse,
     passwordConfirmationValidator,
 
     (req, res, next) => {
@@ -78,6 +69,18 @@ export const registerPost = [
     },
     async (req, res, next) => {
         try {
+            const existingUser = await getUserByEmail(req.body.email);
+            if (existingUser) {
+                return res.status(422).render("auth/register-form", {
+                    errors: [{ msg: "E-mail already in use" }],
+                    formData: {
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        email: req.body.email,
+                    },
+                });
+            }
+
             const hashedPassword = await bcrypt.hash(
                 req.body.password,
                 10
@@ -94,7 +97,18 @@ export const registerPost = [
 
             res.redirect("/auth/login");
         } catch (err) {
-            console.log(err);
+            console.error("Registration failed:", err);
+
+            return res.status(500).render("auth/register-form", {
+                errors: [{
+                    msg: "We couldn't complete registration. Please try again later.",
+                }],
+                formData: {
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    email: req.body.email,
+                },
+            });
         }
     }
 ];

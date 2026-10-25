@@ -17,19 +17,36 @@ export const handleUploadError = async (err, req, res, next) => {
         message = "This file type is not supported.";
     }
 
-    // load whatever my-files.ejs needs
-    const folders = await getFoldersByUser(req.user.id);
-    const files = await getFilesInRoot(req.user.id);
-    const supabaseProjectId = new URL(process.env.SUPABASE_URL)
-    .hostname
-    .split(".")[0];
+    try {
+        // load whatever my-files.ejs needs
+        const folders = await getFoldersByUser(req.user.id);
+        const files = await getFilesInRoot(req.user.id);
 
-    return res.status(400).render("my-files", {
-        title: "My Files",
-        folders,
-        files,
-        uploadErrors: [{ msg: message }],
-        maxFileSize: MAX_FILE_SIZE,
-        supabaseProjectId
-    });
+        const supabaseProjectId = new URL(process.env.SUPABASE_URL)
+            .hostname
+            .split(".")[0];
+
+        return res.status(400).render("my-files", {
+            title: "My Files",
+            folders,
+            files,
+            uploadErrors: [{ msg: message }],
+            maxFileSize: MAX_FILE_SIZE,
+            supabaseProjectId
+        });
+    } catch (error) {
+        next(error);
+    }
 };
+
+export const globleErrorHandler = async (err, req, res, next) => {
+    console.error(err);
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    return res.status(500).send(
+        "Something went wrong. Please try again later."
+    );
+}

@@ -3,15 +3,6 @@ const passwordInput = document.getElementById("password");
 const passwordToggle = document.querySelector(".password-toggle");
 
 if (registerForm) {
-    const encodedServerErrors = registerForm.dataset.serverErrors || "";
-    const serverErrors = encodedServerErrors
-        ? JSON.parse(decodeURIComponent(encodedServerErrors))
-        : [];
-
-    if (serverErrors.length > 0) {
-        alert(serverErrors.join("\n"));
-    }
-
     registerForm.addEventListener("submit", (event) => {
         const invalidFields = Array.from(registerForm.querySelectorAll(":invalid"));
 
@@ -36,9 +27,18 @@ if (registerForm) {
             return `${fieldName} is invalid.`;
         });
 
-        alert([...new Set(messages)].join("\n"));
-        invalidFields[0].focus();
-        registerForm.reportValidity();
+        const errorContainer = document.getElementById("register-errors");
+
+errorContainer.replaceChildren();
+
+for (const message of new Set(messages)) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = message;
+    errorContainer.append(paragraph);
+}
+
+errorContainer.hidden = false;
+invalidFields[0].focus();
     });
 }
 
