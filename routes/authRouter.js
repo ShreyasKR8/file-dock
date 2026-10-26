@@ -4,8 +4,8 @@ import {
     loginGet,
     logoutGet,
     registerPost,
+    loginPost,
 } from '../controllers/authController.js'
-import passport from 'passport';
 
 const authRouter = Router();
 
@@ -13,12 +13,7 @@ authRouter.get('/register', registerGet);
 authRouter.post('/register', registerPost);
 
 authRouter.get('/login', loginGet);
-authRouter.post('/login',
-    passport.authenticate("local", {
-        successRedirect: "/",
-        failureRedirect: "/auth/login",
-    })
-);
+authRouter.post('/login', loginPost);
 
 authRouter.get('/logout', logoutGet);
 

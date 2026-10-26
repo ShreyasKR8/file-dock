@@ -11,7 +11,7 @@ const localStrategy =
 
             if (!user) {
                 return done(null, false, {
-                    message: "Incorrect email",
+                    message: "Incorrect email or password",
                 });
             }
 
@@ -22,7 +22,7 @@ const localStrategy =
 
             if (!match) {
                 return done(null, false, {
-                    message: "Incorrect password",
+                    message: "Incorrect email or password",
                 });
             }
 

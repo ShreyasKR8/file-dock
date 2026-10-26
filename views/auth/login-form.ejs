@@ -17,10 +17,17 @@
             </div>
 
             <form action="/auth/login" method="POST" id="login-form">
+                <div id="register-errors" class="form-errors" role="alert" <%=error == null ? 'hidden' : '' %>>
+                    <% if(error) { %>
+                        <p>
+                            <%= error %>
+                        </p>
+                    <% }; %>
+                </div>
                 <div class="form-grid">
                     <div class="field">
                         <label for="email">Email</label>
-                        <input id="email" name="email" placeholder="Email" type="email" required />
+                        <input id="email" name="email" placeholder="Email" type="email" value="<%= formData?.email || '' %>" required />
                     </div>
                     <div class="field">
                         <label for="password">Password</label>

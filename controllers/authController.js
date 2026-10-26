@@ -1,6 +1,7 @@
 import { body, validationResult } from "express-validator";
 import { createUser, getUserByEmail } from "../db/userQueries.js";
 import bcrypt from "bcryptjs";
+import passport from 'passport';
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 50 characters.";
@@ -114,8 +115,42 @@ export const registerPost = [
 ];
 
 export const loginGet = (req, res) => {
-    res.render("auth/login-form");
+    const flash = req.session.loginError;
+    delete req.session.loginError;
+
+    res.render("auth/login-form", { 
+        error: flash?.error || null,
+        formData: flash?.formData ?? {},
+    });
 };
+
+export const loginPost = (req, res, next) => {
+
+    passport.authenticate("local", (error, user, info, status) => {
+        if (error) {
+            return next(error);
+        }
+
+        if (!user) {
+            req.session.loginError = {
+                error: info ? info.message : 'Invalid credentials',
+                formData: {
+                    email: req.body.email,
+                }
+            };
+
+            return res.redirect('login');
+        }
+
+        req.logIn(user, (err) => {
+            if(err) {
+                return next(err);
+            }
+
+            return res.redirect('/');
+        });
+    })(req, res, next);
+}
 
 export const logoutGet = (req, res, next) => {
     req.logout((err) => {
