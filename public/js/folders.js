@@ -14,6 +14,7 @@ const shareDialog = document.querySelector(".share-dialog");
 const cancelShareBtn = document.querySelector(".cancel-share-folder-btn");
 const showLinkDialog = document.querySelector('.show-link-dialog');
 const closeShowLinkBtn = document.querySelector(".close-show-link-btn");
+const shareError = document.querySelector('.share-error');
 
 
 //-------------- Bind create folder events----------------//
@@ -78,8 +79,9 @@ cancelDeleteBtns?.forEach(btn => {
 //----------------- Bind share folder events ---------------//
 shareBtns?.forEach(btn => {
     btn.addEventListener("click", () => {
-        const folderId = btn.dataset.folderId;
+        shareError.textContent = "";
 
+        const folderId = btn.dataset.folderId;
         shareForm.action = `/folders/${folderId}/share`;
 
         shareDialog.showModal();
@@ -92,26 +94,30 @@ cancelShareBtn?.addEventListener("click", () => {
 
 shareForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
+    shareError.textContent = "";
 
-    const response = await fetch(shareForm.action, {
-        method: "POST",
-        body: new URLSearchParams(new FormData(shareForm)),
-    });
+    try {
+        const response = await fetch(shareForm.action, {
+            method: "POST",
+            body: new URLSearchParams(new FormData(shareForm)),
+        });
+    
+        const data = await response.json();
+        // if not ok, data === "Invalid link duration" set from controller.
+        
+        if(!response.ok) {
+            throw new Error(data || "Could not create share link.");
+        }
 
-    if(!response.ok) {
-        console.log(response.statusText);
-        return;
+        shareDialog.close();
+    
+        showLinkDialog.showModal();
+    
+        const linkText = document.querySelector(".share-link");
+        linkText.textContent = data.link;
+    } catch (err) {
+        shareError.textContent = err.message;
     }
-
-    const data = await response.json();
-    // console.log(data.link, data.expiresAt);
-
-    shareDialog.close();
-
-    showLinkDialog.showModal();
-
-    const linkText = document.querySelector(".share-link");
-    linkText.textContent = data.link;
 });
 
 closeShowLinkBtn?.addEventListener("click", () => {

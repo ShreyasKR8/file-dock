@@ -170,18 +170,17 @@ export const deleteFolder = async (req, res, next) => {
 };
 
 export const createFolderShareLink = async (req, res) => {
-
     const folderId = Number(req.params.id);
     if (isNaN(folderId)) {
         console.log("NAN folder")
-        return res.status(400).send('Invalid folder ID');
+        return res.status(400).json('Invalid folder ID');
     }
 
     // folder ownership check
     const folder = await getFolderById(folderId, req.user.id);
     if (!folder) {
         console.log("folder ownership check")
-        return res.status(404).send("Folder not found");
+        return res.status(404).json("Folder not found");
     }
 
     // Generate a secure random token
@@ -196,7 +195,7 @@ export const createFolderShareLink = async (req, res) => {
     const validDuration = Number(req.body.validDuration);
     if (!allowedDurations.includes(validDuration)) {
         console.log("allowed durartion")
-        return res.status(400).send("Invalid link duration");
+        return res.status(400).json("Invalid link duration");
     }
     
     const expiresAt = new Date(
@@ -206,12 +205,11 @@ export const createFolderShareLink = async (req, res) => {
     const linkRecord = await createShareLink(folderId, tokenHash, expiresAt);
     if(!linkRecord) {
         console.log("link create failed")
-        return res.status(400).send('Link creation failed');
+        return res.status(400).json('Link creation failed, try again later');
     }
 
     const shareLink = new URL(`/shared/${token}`, process.env.APP_URL).toString();
 
-    //Todo: temp return json, show the link later
     return res.status(201).json({
         link: shareLink,
         expiresAt

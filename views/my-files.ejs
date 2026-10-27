@@ -124,6 +124,9 @@
         <dialog class="share-dialog">
             <h3>Share Folder</h3>
             <form class="share-folder-form" method="POST">
+                <div class="share-form-error" role="alert">
+                    <p class="share-error" style="color: red;"></p>
+                </div>
                 <label for="validDuration">Link expires after</label>
                 <select name="validDuration" id="validDuration">
                     <option value="1">1 day</option>
