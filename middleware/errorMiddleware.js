@@ -1,5 +1,5 @@
 
-export const globleErrorHandler = async (err, req, res, next) => {
+export const globalErrorHandler = async (err, req, res, next) => {
     console.error(err);
 
     if (res.headersSent) {

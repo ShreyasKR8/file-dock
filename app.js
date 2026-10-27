@@ -10,7 +10,7 @@ import authRouter from "./routes/authRouter.js";
 import fileRouter from "./routes/fileRouter.js";
 import folderRouter from "./routes/folderRouter.js";
 import methodOverride from "method-override";
-import { globleErrorHandler } from "./middleware/errorMiddleware.js";
+import { globalErrorHandler } from "./middleware/errorMiddleware.js";
 import sharedRouter from "./routes/sharedRouter.js";
 
 const app = express();
@@ -70,7 +70,7 @@ app.use('/files', fileRouter);
 app.use('/folders', folderRouter);
 app.use('/shared', sharedRouter);
 
-app.use(globleErrorHandler);
+app.use(globalErrorHandler);
 
 app.listen(PORT, () => {
     console.log(`server listening at ${PORT}`);
