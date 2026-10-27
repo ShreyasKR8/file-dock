@@ -7,7 +7,6 @@ import {
     getFileById, getFilesInRoot
 } from "../db/fileQueries.js";
 import path from "node:path";
-import upload from "../middleware/upload.js";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
 import { createSignedUpload } from "../services/storageService.js";
 import supabase from "../config/supabase.js";
@@ -246,44 +245,6 @@ const formatFileSize = (bytes) => {
     }
 
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
-};
-
-// not used anymore as we moved from multer to supabase
-export const handleFileUpload = (req, res, next) => {
-    upload.single("file")(req, res, (err) => {
-        if (!err) {
-            return next();
-        }
-
-        return next(err);
-    });
-};
-
-// not used anymore as we moved from multer to supabase
-export const uploadFile = async (req, res) => {
-    const folderId = req.body.folderId
-        ? Number(req.body.folderId)
-        : null;
-
-    if (folderId !== null) {
-        const folder = await getFolderById(folderId, req.user.id);
-        if (!folder) {
-            return res.status(400).send('Invalid folder');
-        }
-    }
-
-    const fileData = {
-        name: req.file.originalname,
-        storageKey: req.file.filename,
-        mimeType: req.file.mimetype,
-        size: req.file.size,
-        userId: req.user.id,
-        folderId,
-    };
-
-    await createFile(fileData);
-
-    res.redirect("/files");
 };
 
 export const deleteFile = async (req, res, next) => {
