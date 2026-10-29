@@ -67,7 +67,26 @@ export const createFolderPost = [
 
             res.redirect(303, "/files");
         } catch (err) {
-            console.log(err);
+            // if folder with the name already exists..
+            // indicating unique constraint violation thrown by prisma
+            if (err.code === "P2002") {
+                req.session.formError = {
+                    action: "create-folder",
+                    errors: [
+                        {
+                            path: "name",
+                            msg: "A folder with the name already exists"
+                        },
+                    ],
+                    formData: { name: req.body.name },
+                };
+
+                return req.session.save((saveErr) => {
+                    if (saveErr) return next(saveErr);
+                    return res.redirect(303, "/files");
+                });
+            }
+            
             next(err);
         }
     }
