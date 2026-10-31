@@ -8,12 +8,12 @@ import {
     updateFolderName,
     createShareLink,
 } from "../db/folderQueries.js";
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { randomBytes, createHash } from "node:crypto";
 
 const allowedDurations = [1, 7, 30];
 
-export const validateFolder = [
+export const validateFolderName = [
     body("name")
         .trim()
         .notEmpty()
@@ -36,11 +36,16 @@ export const validateFolder = [
             return true;
         }
     ),
-    param("id").isInt({ min: 1 })
 ];
 
+const validateFolderId =[
+    param("id")
+    .isInt({ min: 1 })
+    .withMessage("Invalid Folder Id"),
+]
+
 export const createFolderPost = [
-    validateFolder,
+    validateFolderName,
     async (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -127,7 +132,8 @@ export const getFolder = async (req, res) => {
 };
 
 export const renameFolder = [
-    validateFolder,
+    validateFolderName,
+    validateFolderId,
     async (req, res, next) => {
         
         const errors = validationResult(req);
