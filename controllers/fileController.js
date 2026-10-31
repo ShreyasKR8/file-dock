@@ -40,7 +40,7 @@ export const getMyFiles = async (req, res) => {
 
 export const getFile = async (req, res) => {
     const fileId = Number(req.params.id);
-    if (isNaN(fileId)) {
+    if (!Number.isSafeInteger(fileId)) {
         return res.status(400).send('Invalid file ID');
     }
 
@@ -75,7 +75,7 @@ export const getFile = async (req, res) => {
 export const downloadFile = async (req, res, next) => {
     try {
         const fileId = Number(req.params.id);
-        if (isNaN(fileId)) {
+        if (!Number.isSafeInteger(fileId)) {
             return res.status(400).send('Invalid file ID');
         }
 
@@ -250,7 +250,7 @@ const formatFileSize = (bytes) => {
 export const deleteFile = async (req, res, next) => {
     try {
         const fileId = Number(req.params.id);
-        if (isNaN(fileId)) {
+        if (!Number.isSafeInteger(fileId)) {
             return res.status(400).send('Invalid file ID');
         }
 

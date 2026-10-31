@@ -28,7 +28,7 @@ export const downloadSharedFile = async(req, res, next) => {
         const folder = sharedFolder.folder;
 
         const fileId = Number(req.params.fileId);
-        if (isNaN(fileId)) {
+        if (!Number.isSafeInteger(fileId)) {
             return res.status(400).send('Invalid file ID');
         }
 
