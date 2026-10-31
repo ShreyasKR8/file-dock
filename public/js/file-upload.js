@@ -4,11 +4,20 @@ const uploadForm = document.querySelector("#upload-form");
 const fileInput = document.querySelector("#file-input");
 const folderSelectElement = document.querySelector(".folder-select");
 const uploadError = document.querySelector("#upload-error");
+const uploadButton = uploadForm.querySelector('[type="submit"]');
+const uploadProgress = document.querySelector("#upload-progress");
+const progressBar = document.querySelector("#upload-progress-bar");
+const progressPercentage = document.querySelector("#upload-percentage");
+const progressBytes = document.querySelector("#upload-bytes");
+const uploadStatus = document.querySelector("#upload-status");
+const uploadButtonLabel = uploadButton.textContent;
 
 let folderId = null;
+let uploading = false;
 
 uploadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (uploading) return;
     uploadError.textContent = "";
     uploadError.hidden = true;
 
@@ -18,6 +27,13 @@ uploadForm.addEventListener("submit", async (event) => {
         showUploadError("Choose a file to upload.");
         return;
     }
+
+    setUploading(true);
+    progressBar.value = 0;
+    progressPercentage.textContent = "0%";
+    progressBytes.textContent = `0.0 / ${formatMB(file.size)} MB`;
+    uploadProgress.hidden = false;
+    setUploadStatus("Preparing upload…");
 
     try {
         const response = await fetch("/files/upload-request", {
@@ -43,9 +59,7 @@ uploadForm.addEventListener("submit", async (event) => {
         const bucketName = window.SUPABASE_BUCKET;
 
         if(!bucketName) {
-            throw new Error(
-                errorData?.error ?? `(${response.status}).`
-            );
+            throw new Error("Upload storage is not configured.");
         } 
 
         const { storagePath, token } = await response.json();
@@ -93,6 +107,7 @@ uploadForm.addEventListener("submit", async (event) => {
             );
         }
 
+        setUploadStatus("Uploading…");
         upload.start();
     } catch (error) {
         console.error("Upload setup failed:", error);
@@ -101,9 +116,8 @@ uploadForm.addEventListener("submit", async (event) => {
 });
 
 async function handleUploadComplete(storagePath, file) {
-    console.log("Upload successful.");
-    // console.log("Storage path:", storagePath);
-    // console.log("TUS URL:", upload.url);
+    onUploadProgress(file.size, file.size);
+    setUploadStatus("Saving file…");
 
     if (folderSelectElement) {
         folderId = folderSelectElement.value
@@ -137,10 +151,29 @@ async function handleUploadComplete(storagePath, file) {
 }
 
 function onUploadProgress(bytesUploaded, bytesTotal) {
-    const percentage =
-        ((bytesUploaded / bytesTotal) * 100).toFixed(1);
+    const percentage = bytesTotal > 0
+        ? Math.min(100, Math.max(0, bytesUploaded / bytesTotal * 100))
+        : 0;
+    progressBar.value = percentage;
+    progressPercentage.textContent = `${Math.floor(percentage)}%`;
+    progressBytes.textContent = `${formatMB(bytesUploaded)} / ${formatMB(bytesTotal)} MB`;
+    setUploadStatus(percentage === 100 ? "Saving file…" : "Uploading…");
+}
 
-    console.log(`${percentage}%`);
+function formatMB(bytes) {
+    return (bytes / (1024 * 1024)).toFixed(1);
+}
+
+function setUploadStatus(message) {
+    if (uploadStatus.textContent !== message) uploadStatus.textContent = message;
+}
+
+function setUploading(active) {
+    uploading = active;
+    fileInput.disabled = active;
+    if (folderSelectElement) folderSelectElement.disabled = active;
+    uploadButton.disabled = active;
+    uploadButton.textContent = active ? "Uploading…" : uploadButtonLabel;
 }
 
 function onUploadError(error) {
@@ -149,6 +182,9 @@ function onUploadError(error) {
 }
 
 function showUploadError(message) {
+    setUploading(false);
+    uploadProgress.hidden = true;
+    setUploadStatus("");
     uploadError.textContent = message;
     uploadError.hidden = false;
 }

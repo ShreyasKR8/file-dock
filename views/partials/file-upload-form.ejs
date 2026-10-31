@@ -6,6 +6,14 @@
         name="file" 
         data-max-file-size="<%= maxFileSize %>" 
         required>
+    <div id="upload-progress" class="upload-progress" hidden>
+        <progress id="upload-progress-bar" max="100" value="0" aria-label="File upload progress"></progress>
+        <div class="upload-progress-details">
+            <span id="upload-percentage">0%</span>
+            <span id="upload-bytes">0.0 / 0.0 MB</span>
+        </div>
+    </div>
+    <span id="upload-status" class="upload-status" role="status" aria-live="polite" aria-atomic="true"></span>
     </div>
 
     <% if(showFolderSelect) { %>

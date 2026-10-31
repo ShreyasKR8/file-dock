@@ -320,8 +320,59 @@ button:hover, .btn-secondary:hover {
 #upload-form {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
+  align-items: start;
   gap: 16px;
+}
+#upload-form .field > label {
+  line-height: 20px;
+}
+#upload-form > .btn {
+  margin-top: 27px;
+}
+#upload-form :disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.upload-progress {
+  margin-top: 5px;
+  min-width: 0;
+}
+.upload-progress progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  appearance: none;
+  background: var(--line);
+  color: var(--brand);
+}
+.upload-progress progress::-webkit-progress-bar {
+  background: var(--line);
+  border-radius: 3px;
+}
+.upload-progress progress::-webkit-progress-value {
+  background: var(--brand);
+  border-radius: 3px;
+}
+.upload-progress progress::-moz-progress-bar {
+  background: var(--brand);
+  border-radius: 3px;
+}
+.upload-progress-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.upload-progress-details, .upload-status {
+  color: var(--muted);
+  font-size: 12px;
+}
+.upload-status:empty {
+  position: absolute;
 }
 .upload-file {
   flex: 2 1 280px;
@@ -701,6 +752,7 @@ dialog button {
   }
   #upload-form > .btn {
     width: 100%;
+    margin-top: 0;
   }
   .auth-page {
     padding: 32px 16px 48px;
