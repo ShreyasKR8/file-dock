@@ -59,9 +59,15 @@
                 <div class="file">
                     <span class="item-kind">File</span><p class="item-name"><%= file.name %></p>
                     <a href="/files/<%= file.id %>">View Details</a>
-                    <form action="/files/<%= file.id %>?_method=DELETE" method="POST">
-                        <button type="submit">Delete</button>
-                    </form>
+                    <button type="button" class="delete-file-btn">Delete</button>
+                    <dialog class="delete-file-dialog">
+                        <form action="/files/<%= file.id %>?_method=DELETE" method="POST">
+                            <h2>Delete file <%= file.name %></h2>
+                            <p>Are you sure?</p>
+                            <button type="button" class="cancel-delete-file-btn">Cancel</button>
+                            <button type="submit">Delete</button>
+                        </form>
+                    </dialog>
                 </div>
             <% }); %>
             <% folders.forEach(folder => {
@@ -147,5 +153,6 @@
     </main>
     <%- include("partials/footer") %>
     <script src="/js/folders.js" defer></script>
+    <script src="/js/files.js" defer></script>
 </body>
 </html>
