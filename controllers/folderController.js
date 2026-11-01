@@ -108,7 +108,7 @@ export const createFolderGet = async (req, res) => {
 
 export const getFolder = async (req, res) => {
     const folderId = Number(req.params.id);
-    if (!Number.isSafeInteger(fileId)) {
+    if (!Number.isSafeInteger(folderId)) {
         return res.status(400).send('Invalid folder ID');
     }
 
@@ -169,7 +169,7 @@ export const renameFolder = [
 
 export const deleteFolder = async (req, res, next) => {
     const folderId = Number(req.params.id);
-    if (!Number.isSafeInteger(fileId)) {
+    if (!Number.isSafeInteger(folderId)) {
         return res.status(400).send('Invalid folder ID');
     }
 
@@ -199,7 +199,7 @@ export const deleteFolder = async (req, res, next) => {
 
 export const createFolderShareLink = async (req, res) => {
     const folderId = Number(req.params.id);
-    if (!Number.isSafeInteger(fileId)) {
+    if (!Number.isSafeInteger(folderId)) {
         console.log("NAN folder")
         return res.status(400).json('Invalid folder ID');
     }
