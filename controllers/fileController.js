@@ -10,7 +10,7 @@ import path from "node:path";
 import { ALLOWED_MIME_TYPES, MAX_FILE_SIZE } from "../config/constants.js";
 import { createSignedUpload } from "../services/storageService.js";
 import supabase from "../config/supabase.js";
-
+import mime from "mime";
 
 export const getMyFiles = async (req, res) => {
     const folders = await getFoldersByUser(req.user.id);
@@ -51,11 +51,11 @@ export const getFile = async (req, res) => {
     }
 
     const parsedName = path.parse(file.name);
+    const mimeType = mime.getType(parsedName.ext);
 
     const fileDetails = {
-        ...file,
         name: parsedName.name,
-        extension: parsedName.ext,
+        mimeType,
         size: formatFileSize(file.size),
         createdAt:
             file.createdAt.toLocaleString("en-IN", {
@@ -67,6 +67,7 @@ export const getFile = async (req, res) => {
                 hour: "numeric",
                 minute: "2-digit",
             }) + " IST",
+        downloadUrl: `/files/${fileId}/download`,
     };
 
     res.render("file", { file: fileDetails });

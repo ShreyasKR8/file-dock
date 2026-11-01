@@ -14,14 +14,7 @@
     <main id="main-content" class="page-shell">
     <% if (locals.currentUser != null) { %>
         <div class="page-heading"><p class="eyebrow">Your workspace</p><h1 class="page-title">File details</h1></div>
-        <div class="file-details">
-            <span class="item-kind">File</span>
-            <h2><%= file.name %></h2>
-            <p>Type: <%= file.extension %></p>
-            <p>Size: <%= file.size %></p>
-            <p>Uploaded: <%= file.createdAt %></p>
-            <a href="/files/<%= file.id %>/download">Download</a>
-        </div>
+        <%- include("partials/file-details", {file}) %>
     <% } %>
     <a class="btn btn-secondary back-link" href="/files">← Back to my files</a>
     </main>

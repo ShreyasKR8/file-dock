@@ -1,5 +1,6 @@
 import { getFileById, getFilesByFolderId } from "../db/fileQueries.js";
-import { createHash } from "node:crypto";
+import path from "node:path";
+import mime from "mime";
 import supabase from "../config/supabase.js";
 
 export const getSharedFolder = async (req, res) => {
@@ -13,11 +14,32 @@ export const getSharedFolder = async (req, res) => {
 
     const files = await getFilesByFolderId(folder.id, folder.userId);
 
+    const allFileDetails = files.map(file => {
+        const parsedName = path.parse(file.name);
+        const mimeType = mime.getType(parsedName.ext);
+
+        return {
+            name: parsedName.name,
+            mimeType,
+            size: formatFileSize(file.size),
+            createdAt:
+                file.createdAt.toLocaleString("en-IN", {
+                    timeZone: "Asia/Kolkata",
+                    weekday: "long",
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                }) + " IST",
+            downloadUrl: `/shared/${req.params.token}/files/${file.id}/download`,
+        };
+    });
+
     res.render("shared-folder", {
         title: folder.name? folder.name : "Shared folder",  
         folder,
-        files,
-        token: req.params.token,
+        files: allFileDetails,
     });
 };
 
@@ -61,4 +83,16 @@ export const downloadSharedFile = async(req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+const formatFileSize = (bytes) => {
+    if (bytes < 1024 * 1024) {
+        return `${(bytes / 1024).toFixed(2)} KB`;
+    }
+
+    if (bytes < 1024 * 1024 * 1024) {
+        return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+    }
+
+    return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 };

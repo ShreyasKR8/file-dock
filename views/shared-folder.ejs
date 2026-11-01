@@ -19,15 +19,7 @@
                 <div class="empty-state"><span class="empty-icon" aria-hidden="true">＋</span><h3>No files here yet</h3><p class="meta-text">Files will appear here when the owner adds them.</p></div>
             <% } %>
         <% files.forEach(file=> { %>
-            <div class="file-details">
-                <span class="item-kind">File</span><h3><%= file.name %></h3>
-                <p>Type: <%= file.extension %></p>
-                <p>Size: <%= file.size %></p>
-                <p>Uploaded: <%= file.createdAt %></p>
-                <a href="/shared/<%= token %>/files/<%= file.id %>/download">
-                    Download
-                </a>
-            </div>
+            <%- include("partials/file-details", {file}) %>
         <% }); %>
     </div>
     </section>
