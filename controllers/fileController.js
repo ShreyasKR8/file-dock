@@ -280,7 +280,11 @@ export const deleteFile = async (req, res, next) => {
 
         await deleteFileById(fileId);
 
-        res.redirect('/');
+        const redirectUrl = file.folderId != null 
+        ? `/folders/${file.folderId}` 
+        : "/files";
+
+        res.redirect(303, redirectUrl);
     } catch (error) {
         console.log("File Delete failed: ", error);
         next(error);

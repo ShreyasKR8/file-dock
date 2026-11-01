@@ -147,7 +147,11 @@ async function handleUploadComplete(storagePath, file) {
         );
     }
 
-    window.location.href = "/";
+    const redirectUrl = folderId != null 
+    ? `/folders/${folderId}` 
+    : "/files";
+
+    window.location.replace(redirectUrl) // navigates without adding a new history entry.
 }
 
 function onUploadProgress(bytesUploaded, bytesTotal) {
