@@ -16,7 +16,7 @@
         <div class="page-heading"><p class="eyebrow">Your workspace</p><h1 class="page-title">File details</h1></div>
         <%- include("partials/file-details", {file}) %>
     <% } %>
-    <a class="btn btn-secondary back-link" href="/files">← Back to my files</a>
+    <a class="btn btn-secondary back-link" href="<%= returnUrl %>">← Back to folder</a>
     </main>
     <%- include("partials/footer") %>
 </body>

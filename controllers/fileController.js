@@ -70,7 +70,11 @@ export const getFile = async (req, res) => {
         downloadUrl: `/files/${fileId}/download`,
     };
 
-    res.render("file", { file: fileDetails });
+    const returnUrl = file.folderId != null 
+    ? `/folders/${file.folderId}` 
+    : "/files";
+
+    res.render("file", { file: fileDetails, returnUrl });
 };
 
 export const downloadFile = async (req, res, next) => {
@@ -187,7 +191,7 @@ export const completeUpload = async (req, res, next) => {
 
         const file = await createFile(fileData);
 
-        // redirects to '/' home in file-upload.js file
+        // redirects in file-upload.js file
         return res.status(201).json({ file });
     } catch (error) {
         next(error);
