@@ -1,4 +1,3 @@
-
 # FileDock Roadmap
 
 This roadmap outlines the development of FileDock beyond its initial file-management functionality. The focus is on authentication, secure file sharing, usability, and production readiness while keeping the project scope practical.
@@ -40,21 +39,37 @@ This roadmap outlines the development of FileDock beyond its initial file-manage
 - Reject unsupported uploads
 - Display upload errors to users
 
+### 5. Expiring Folder Sharing
+
+- Store share-link records with expiration times and SHA-256 token hashes
+- Generate cryptographically secure share tokens
+- Let folder owners choose from supported expiration durations
+- Provide a public, read-only `/shared/:token` view without login
+- Reject invalid links with 404 and expired links with 410
+- Restrict shared downloads to files inside the linked folder
+- Generate short-lived signed download URLs
+- Remove share-link records automatically when a folder is deleted
+- Generate absolute share links using `APP_URL` and display generation errors
+
+### 6. Usability and Validation Improvements
+
+- Refresh page layouts, forms, and file cards
+- Show upload progress and require confirmation before deleting a file
+- Display readable file sizes and upload dates
+- Preserve return destinations after file views, uploads, and deletions
+- Show inline registration, login, and folder validation errors
+- Report duplicate folder names and validate protected route IDs as positive integers
+- Check ownership when completing uploads and scope root files to the current user
+- Remove the legacy local upload flow
+
 ## Planned Features
 
-### 1. Expiring Folder Share Links — Next Priority
+### 1. Folder Share-Link Management
 
-Allow authenticated users to generate public, time-limited links for folders.
+Expiring public folder sharing is implemented (see completed features). Remaining work:
 
-- [ ] Design a database model for share links
-- [ ] Generate cryptographically secure share tokens
-- [ ] Allow users to choose an expiration duration
-- [ ] Add a public, read-only `/share/:token` route
-- [ ] Validate tokens and reject expired or invalid links
-- [ ] Allow unauthenticated users to view shared folders and their contents
-- [ ] Provide controlled access to files and downloads
-- [ ] Prevent access to folders outside the shared scope
-- [ ] Allow folder owners to revoke existing share links
+- [ ] List existing share links and their expiration times for folder owners
+- [ ] Allow folder owners to revoke individual share links
 
 ### 2. OAuth 2.0 Authentication
 
@@ -102,9 +117,10 @@ Before considering FileDock feature-complete:
 - [ ] Validate configuration and environment variables
 - [ ] Review rate limiting and security measures for authentication and public sharing
 - [ ] Refactor duplicated logic into reusable services where appropriate
-- [ ] Prepare production database migrations
+- [x] Add build, Prisma client generation, and migration deployment scripts
+- [ ] Verify database migrations in a production-like environment
 - [ ] Deploy the application
-- [ ] Add installation and environment setup instructions
+- [x] Add installation and environment setup instructions
 - [ ] Update the README with screenshots and usage examples
 
 ## Future Considerations
@@ -121,8 +137,8 @@ These features are intentionally outside the current scope but may be explored l
 
 ## Development Priorities
 
-1. Expiring folder share links
-2. Google OAuth 2.0/OpenID Connect authentication
+1. Google OAuth 2.0/OpenID Connect authentication
+2. Share-link management and revocation
 3. Multiple file uploads
 4. File search and sorting
 5. Automated testing and security hardening
