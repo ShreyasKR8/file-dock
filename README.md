@@ -1,5 +1,6 @@
-
 # FileDock
+
+[Live Demo](https://file-dock-u0me.onrender.com/)
 
 FileDock is a file management and storage application built with Express and Prisma. It allows authenticated users to upload, organize, view, download, and delete files through a folder-based storage system.
 
@@ -19,12 +20,16 @@ This project is based on the [File Uploader project](https://www.theodinproject.
 - Download uploaded files
 - Delete files from cloud storage and the database
 - User-based ownership and access control
-- File type and size validation
+- File type validation and a 50 MiB upload limit
+- Upload progress feedback and file deletion confirmation
+- Public, read-only folder links with selectable expiration
+- Shared file downloads through short-lived signed URLs
+- Inline form errors and duplicate folder-name feedback
 
 ## Planned Features
 
-- Shareable folder links with configurable expiration and revocation
 - Google OAuth 2.0 / OpenID Connect authentication
+- Management and revocation of existing folder share links
 - Multiple file uploads
 - File search and sorting
 - Automated testing and security improvements
@@ -52,48 +57,62 @@ See [ROADMAP.md](./ROADMAP.md) for the detailed development roadmap.
 
 ## Getting Started
 
-FileDock is currently under development. Complete installation and environment configuration instructions will be added as the project progresses.
+### Prerequisites
 
-### Run the Application
+- Node.js compatible with the installed Prisma 7 dependencies
+- A PostgreSQL database
+- A Supabase project with a private Storage bucket
 
-Install dependencies:
+### Installation and Configuration
+
+From the repository root, install dependencies and create a local environment file:
 
 ```bash
 npm install
+cp .env.example .env
 ```
 
-Start the application:
+Set these values in `.env`:
+
+| Variable | Purpose |
+| --- | --- |
+| `APP_URL` | Application origin used to generate share links, such as `http://localhost:3000` |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `SESSION_SECRET` | Long random secret for sessions |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_SECRET_KEY` | Server-side Supabase secret key |
+| `SUPABASE_BUCKET` | Existing private Storage bucket name |
+| `PORT` | Optional server port; defaults to `3000` |
+
+Keep the Supabase secret key server-side and do not commit `.env`.
+
+Generate the Prisma client and browser upload bundle, apply the committed database migrations, and start the server:
 
 ```bash
+npm run build
+npm run db:deploy
 npm start
 ```
 
-The start script automatically builds the browser upload bundle before launching the application.
+Open `http://localhost:3000` (or your configured port). `npm start` only launches the server; run the build separately before starting a fresh checkout or deployment.
 
-### Running Directly with Node.js
+### Development
 
-If starting the application directly:
+After changing the browser upload code, run `npm run build:client`, or use `npm run dev:client` to rebuild it automatically. Run `npm run db:generate` after schema changes.
 
-```bash
-npm run build:client
-node app.js
-```
+### Usage
 
-Run `npm run build:client` again after pulling changes that affect the frontend upload code.
+Register or log in, create a folder, and upload a file into that folder or the root directory. Supported upload types are JPEG, PNG, WebP, MP4, PDF, plain text, and ZIP, up to 50 MiB per file.
 
-### Environment Configuration
+Generate a share link from a folder and choose an expiration duration. Anyone with the link can view that folder and download its files without signing in. Invalid links return 404 and expired links return 410. Deleting a folder removes its share-link records; individual link revocation is still planned.
 
-The application requires PostgreSQL and Supabase Storage configuration.
-
-Refer to `.env.example` for the required environment variables.
-
-Do not commit `.env` files containing credentials or secrets.
+There is currently no automated test suite; `npm test` is a placeholder that exits with an error.
 
 ## Development Status
 
 FileDock's core file-management functionality and cloud storage integration are implemented.
 
-Current development is focused on expiring folder share links, followed by OAuth authentication, multiple file uploads, and search functionality.
+Expiring folder sharing and public downloads are implemented. Remaining work includes share-link management and revocation, Google authentication, multiple file uploads, search, automated tests, and production hardening.
 
 ## License
 
